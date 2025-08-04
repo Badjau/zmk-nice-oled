@@ -130,19 +130,19 @@ void draw_animation(lv_obj_t *canvas, struct zmk_widget_screen *widget) {
     if (art) {
 #if IS_ENABLED(CONFIG_NICE_OLED_GEM_ANIMATION)
         /* coordinate adjustment if it was Gem animation */
-        lv_obj_align(art, LV_ALIGN_TOP_LEFT, 18, -18);
+        lv_obj_align(art, LV_ALIGN_BOTTOM_LEFT, 18, -18);
 #elif IS_ENABLED(CONFIG_NICE_OLED_POKEMON_ANIMATION)
         /* coordinate adjustment if it was the Pokémon animation */
-        lv_obj_align(art, LV_ALIGN_TOP_LEFT, -40, -18);
+        lv_obj_align(art, LV_ALIGN_BOTTOM_LEFT, -40, -18);
 #else
         /* Fixed image adjustment */
-        lv_obj_align(art, LV_ALIGN_TOP_LEFT, 18, -18);
+        lv_obj_align(art, LV_ALIGN_BOTTOM_LEFT, 18, -18);
 #endif
     }
 
     if (art2) {
         /* Second image coordinate adjustment */
-        lv_obj_align(art2, LV_ALIGN_TOP_LEFT, 2, 0);
+        lv_obj_align(art2, LV_ALIGN_BOTTOM_LEFT, 2, 0);
     }
 }
 #endif

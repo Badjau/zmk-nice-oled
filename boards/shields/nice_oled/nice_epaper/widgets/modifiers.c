@@ -97,7 +97,7 @@ static void set_modifiers_text(lv_obj_t *label, struct modifiers_state ignored) 
                                     CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
             lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
             lv_animimg_start(luna_imgs);
-            lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 100, 15);
+            lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 100, 15);
         }
     } else if (mods & (MOD_LALT | MOD_RALT)) {
         // strcat(text, "A");
@@ -112,7 +112,7 @@ static void set_modifiers_text(lv_obj_t *label, struct modifiers_state ignored) 
                                     CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
             lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
             lv_animimg_start(luna_imgs);
-            lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 100, 15);
+            lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 100, 15);
         }
     } else if (mods & (MOD_LCTL | MOD_RCTL)) {
         // strcat(text, "C");
@@ -127,7 +127,7 @@ static void set_modifiers_text(lv_obj_t *label, struct modifiers_state ignored) 
                                     CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
             lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
             lv_animimg_start(luna_imgs);
-            lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 100, 15);
+            lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 100, 15);
         }
     } else if (mods & (MOD_LSFT | MOD_RSFT)) {
         // strcat(text, "S");
@@ -142,8 +142,8 @@ static void set_modifiers_text(lv_obj_t *label, struct modifiers_state ignored) 
                                     CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
             lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
             lv_animimg_start(luna_imgs);
-            // lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 36, 0);
-            lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 100, 15);
+            // lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 36, 0);
+            lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 100, 15);
         }
     } else {
         if (luna_imgs) {

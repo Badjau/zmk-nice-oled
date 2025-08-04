@@ -211,7 +211,7 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     lv_obj_set_size(widget->obj, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     lv_obj_t *canvas = lv_canvas_create(widget->obj);
-    lv_obj_align(canvas, LV_ALIGN_TOP_LEFT, 0, 0);
+    lv_obj_align(canvas, LV_ALIGN_BOTTOM_LEFT, 0, 0);
     lv_canvas_set_buffer(canvas, widget->cbuf, CANVAS_HEIGHT, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR);
 
     sys_slist_append(&widgets, &widget->node);
@@ -222,7 +222,7 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM)
     zmk_widget_luna_init(&luna_widget, canvas);
-    lv_obj_align(zmk_widget_luna_obj(&luna_widget), LV_ALIGN_TOP_LEFT, 36, 0);
+    lv_obj_align(zmk_widget_luna_obj(&luna_widget), LV_ALIGN_BOTTOM_LEFT, 36, 0);
 #endif
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_HID_INDICATORS)
