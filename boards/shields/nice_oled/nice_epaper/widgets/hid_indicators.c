@@ -101,9 +101,9 @@ static void set_hid_indicators(lv_obj_t *label,
       lv_animimg_set_repeat_count(hid_anim, LV_ANIM_REPEAT_INFINITE);
       lv_animimg_start(hid_anim);
 
-      lv_obj_align(hid_anim, LV_ALIGN_TOP_LEFT, 100, 15);
-      // lv_obj_align(hid_anim, LV_ALIGN_TOP_LEFT, 36, 0);
-      // lv_obj_align(hid_anim, LV_ALIGN_TOP_LEFT, 33, 3);
+      lv_obj_align(hid_anim, LV_ALIGN_BOTTOM_LEFT, 100, 15);
+      // lv_obj_align(hid_anim, LV_ALIGN_BOTTOM_LEFT, 36, 0);
+      // lv_obj_align(hid_anim, LV_ALIGN_BOTTOM_LEFT, 33, 3);
     }
   } else {
     // Si LED_CLCK no está activo, y se había creado la animación, la eliminamos
