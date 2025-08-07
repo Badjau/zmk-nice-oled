@@ -94,9 +94,10 @@ static void draw_charging_level(lv_obj_t *canvas, const struct status_state *sta
 
     sprintf(text, "%i", state->battery);
     // sprintf(text, "%i%%", state->battery);
-    lv_canvas_draw_text(canvas, 0, 0, 35, &label_right_dsc, text);
+    // hide number, just draw icon instead.
+    // lv_canvas_draw_text(canvas, 0, 0, 35, &label_right_dsc, text);
     // lv_canvas_draw_text(canvas, 1, 50, 35, &label_right_dsc, text);
-    lv_canvas_draw_img(canvas, 10, 0, &bolt, &img_dsc);
+    lv_canvas_draw_img(canvas, 0, 2cv, &bolt, &img_dsc);
     // lv_canvas_draw_img(canvas, 0, 50, &bolt, &img_dsc);
 }
 
