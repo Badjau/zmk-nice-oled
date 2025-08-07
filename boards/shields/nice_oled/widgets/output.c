@@ -1,3 +1,5 @@
+//Handles properties of displaying connectivity of BLE and USB
+
 #include "output.h"
 #include "../assets/custom_fonts.h"
 #include <zephyr/kernel.h>
