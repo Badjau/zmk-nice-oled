@@ -58,7 +58,7 @@ static void set_modifiers_text(lv_obj_t *label,
           CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
       lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
       lv_animimg_start(luna_imgs);
-      lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 36, 0);
+      lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 36, 0);
     }
   } else if (mods & (MOD_LALT | MOD_RALT)) {
     if (!luna_imgs) {
@@ -72,7 +72,7 @@ static void set_modifiers_text(lv_obj_t *label,
           CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
       lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
       lv_animimg_start(luna_imgs);
-      lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 36, 0);
+      lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 36, 0);
     }
   } else if (mods & (MOD_LCTL | MOD_RCTL)) {
     if (!luna_imgs) {
@@ -86,7 +86,7 @@ static void set_modifiers_text(lv_obj_t *label,
           CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
       lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
       lv_animimg_start(luna_imgs);
-      lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 36, 0);
+      lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 36, 0);
     }
   } else if (mods & (MOD_LSFT | MOD_RSFT)) {
     if (!luna_imgs) {
@@ -100,7 +100,7 @@ static void set_modifiers_text(lv_obj_t *label,
           CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA_ANIMATION_MS);
       lv_animimg_set_repeat_count(luna_imgs, LV_ANIM_REPEAT_INFINITE);
       lv_animimg_start(luna_imgs);
-      lv_obj_align(luna_imgs, LV_ALIGN_BOTTOM_LEFT, 36, 0);
+      lv_obj_align(luna_imgs, LV_ALIGN_TOP_LEFT, 36, 0);
     }
   } else {
     if (luna_imgs) {

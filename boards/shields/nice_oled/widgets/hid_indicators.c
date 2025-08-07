@@ -51,7 +51,7 @@ static void set_hid_indicators(lv_obj_t *label,
           hid_anim, CONFIG_NICE_OLED_WIDGET_HID_INDICATORS_LUNA_ANIMATION_MS);
       lv_animimg_set_repeat_count(hid_anim, LV_ANIM_REPEAT_INFINITE);
       lv_animimg_start(hid_anim);
-      lv_obj_align(hid_anim, LV_ALIGN_BOTTOM_LEFT, 36, 0);
+      lv_obj_align(hid_anim, LV_ALIGN_TOP_LEFT, 36, 0);
     }
   } else {
     if (hid_anim) {

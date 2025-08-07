@@ -49,7 +49,7 @@ static void animation_smart_battery_on(lv_obj_t *canvas) {
     lv_animimg_set_duration(art, CONFIG_NICE_OLED_GEM_ANIMATION_MS);
     lv_animimg_set_repeat_count(art, LV_ANIM_REPEAT_INFINITE);
     lv_animimg_start(art);
-    lv_obj_align(art, LV_ALIGN_BOTTOM_LEFT, 18, -18);
+    lv_obj_align(art, LV_ALIGN_TOP_LEFT, 18, -18);
 }
 static void animation_smart_battery_off(lv_obj_t *canvas) {
 
@@ -65,7 +65,7 @@ static void animation_smart_battery_off(lv_obj_t *canvas) {
 
     art2 = lv_img_create(canvas);
     lv_img_set_src(art2, SET_ANIMATION_SMART_BATTERY_OFF);
-    lv_obj_align(art2, LV_ALIGN_BOTTOM_LEFT, 18, -18);
+    lv_obj_align(art2, LV_ALIGN_TOP_LEFT, 18, -18);
 }
 #endif
 
