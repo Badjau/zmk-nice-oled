@@ -45,7 +45,7 @@ static void set_modifiers_text(lv_obj_t *label, struct modifiers_state ignored) 
 
     // Check for Control modifier.
     if (mods & (MOD_LCTL | MOD_RCTL)) {
-        strcat(text, "CTL");
+        strcat(text, "CTRL");
     }
 
     // Check for Alt modifier.
@@ -61,7 +61,7 @@ static void set_modifiers_text(lv_obj_t *label, struct modifiers_state ignored) 
         if (strlen(text) > 0) {
             strcat(text, "+");
         }
-        strcat(text, "SFT");
+        strcat(text, "SHIFT");
     }
 
     // Check for Gui (Super/Windows/Command) modifier.
@@ -74,6 +74,7 @@ static void set_modifiers_text(lv_obj_t *label, struct modifiers_state ignored) 
 
     // Update the label with the composed text.
     lv_label_set_text(label, text);
+    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 36, 0);
 }
 
 // Callback function that gets triggered when the modifier state changes.
