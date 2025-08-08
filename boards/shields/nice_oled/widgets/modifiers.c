@@ -19,47 +19,39 @@ struct modifiers_state {
 };
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
-static lv_obj_t *modifier_label = NULL;
 
 static void set_modifiers_text(lv_obj_t *label,
-                               struct modifiers_state ignored) {
-  uint8_t mods = zmk_hid_get_explicit_mods();
-  
-  if (modifier_label) {
-    lv_obj_del(modifier_label);
-    modifier_label = NULL;
-  }
+                               struct modifiers_state state) {
+  uint8_t mods = state.modifiers;
   
   if (mods == 0) {
+    lv_label_set_text(label, "");
     return;
   }
   
-  modifier_label = lv_label_create(label);
-  lv_obj_center(modifier_label);
-  
-  char mod_text[32] = {0};
+  char mod_text[64] = {0}; // Larger buffer for safety
   int pos = 0;
+  bool first = true;
   
-  // Build string by copying each modifier directly
+  // Check each modifier and build string using sprintf
   if (mods & (MOD_LGUI | MOD_RGUI)) {
-    if (pos > 0) pos += sprintf(mod_text + pos, "+");
-    pos += sprintf(mod_text + pos, "GUI");
+    pos += sprintf(mod_text + pos, "%sGUI", first ? "" : "+");
+    first = false;
   }
   if (mods & (MOD_LALT | MOD_RALT)) {
-    if (pos > 0) pos += sprintf(mod_text + pos, "+");
-    pos += sprintf(mod_text + pos, "ALT");
+    pos += sprintf(mod_text + pos, "%sALT", first ? "" : "+");
+    first = false;
   }
   if (mods & (MOD_LCTL | MOD_RCTL)) {
-    if (pos > 0) pos += sprintf(mod_text + pos, "+");
-    pos += sprintf(mod_text + pos, "CTL");
+    pos += sprintf(mod_text + pos, "%sCTL", first ? "" : "+");
+    first = false;
   }
   if (mods & (MOD_LSFT | MOD_RSFT)) {
-    if (pos > 0) pos += sprintf(mod_text + pos, "+");
-    pos += sprintf(mod_text + pos, "SFT");
+    pos += sprintf(mod_text + pos, "%sSFT", first ? "" : "+");
+    first = false;
   }
   
-  lv_label_set_text(modifier_label, mod_text);
-  lv_obj_align(modifier_label, LV_ALIGN_TOP_LEFT, 36, 0);
+  lv_label_set_text(label, mod_text);
 }
 
 static void modifiers_update_cb(struct modifiers_state state) {
@@ -80,10 +72,19 @@ ZMK_SUBSCRIPTION(widget_modifiers, zmk_keycode_state_changed);
 int zmk_widget_modifiers_init(struct zmk_widget_modifiers *widget,
                               lv_obj_t *parent) {
   widget->obj = lv_label_create(parent);
-  // Set empty text initially to prevent "Text" from appearing
+  
+  // Set initial empty text
   lv_label_set_text(widget->obj, "");
   
+  // Set position/alignment for the widget
+  lv_obj_align(widget->obj, LV_ALIGN_TOP_LEFT, 36, 0);
+  
   sys_slist_append(&widgets, &widget->node);
+  
+  // Initialize with current state
+  struct modifiers_state current_state = {.modifiers = zmk_hid_get_explicit_mods()};
+  set_modifiers_text(widget->obj, current_state);
+  
   widget_modifiers_init();
   return 0;
 }
