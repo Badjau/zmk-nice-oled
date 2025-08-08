@@ -49,7 +49,7 @@ static void set_modifiers_text(lv_obj_t *label,
     if (pos > 0) pos += sprintf(mod_text + pos, "+");
     pos += sprintf(mod_text + pos, "ALT");
   }
-  if (mods & (MOD_LCTL spri| MOD_RCTL)) {
+  if (mods & (MOD_LCTL | MOD_RCTL)) {
     if (pos > 0) pos += sprintf(mod_text + pos, "+");
     pos += sprintf(mod_text + pos, "CTL");
   }
