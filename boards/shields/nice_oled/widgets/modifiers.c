@@ -37,24 +37,25 @@ static void set_modifiers_text(lv_obj_t *label,
   modifier_label = lv_label_create(label);
   lv_obj_center(modifier_label);
   
-  char mod_text[32] = {0}; // Increased buffer size for multiple modifiers
+  char mod_text[32] = {0};
+  int pos = 0;
   
-  // Check each modifier and append with proper delimiter
+  // Build string by copying each modifier directly
   if (mods & (MOD_LGUI | MOD_RGUI)) {
-    if (mod_text[0] != '\0') strcat(mod_text, "+");
-    strcat(mod_text, "GUI");
+    if (pos > 0) pos += sprintf(mod_text + pos, "+");
+    pos += sprintf(mod_text + pos, "GUI");
   }
   if (mods & (MOD_LALT | MOD_RALT)) {
-    if (mod_text[0] != '\0') strcat(mod_text, "+");
-    strcat(mod_text, "ALT");
+    if (pos > 0) pos += sprintf(mod_text + pos, "+");
+    pos += sprintf(mod_text + pos, "ALT");
   }
-  if (mods & (MOD_LCTL | MOD_RCTL)) {
-    if (mod_text[0] != '\0') strcat(mod_text, "+");
-    strcat(mod_text, "CTL");
+  if (mods & (MOD_LCTL spri| MOD_RCTL)) {
+    if (pos > 0) pos += sprintf(mod_text + pos, "+");
+    pos += sprintf(mod_text + pos, "CTL");
   }
   if (mods & (MOD_LSFT | MOD_RSFT)) {
-    if (mod_text[0] != '\0') strcat(mod_text, "+");
-    strcat(mod_text, "SFT");
+    if (pos > 0) pos += sprintf(mod_text + pos, "+");
+    pos += sprintf(mod_text + pos, "SFT");
   }
   
   lv_label_set_text(modifier_label, mod_text);
