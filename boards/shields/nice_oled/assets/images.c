@@ -180,9 +180,9 @@ const lv_img_dsc_t usb = {
     .header.cf = LV_IMG_CF_INDEXED_1BIT,
     .header.always_zero = 0,
     .header.reserved = 0,
-    .header.w = 20,
-    .header.h = 11,
-    .data_size = 41,
+    .header.w = 9,
+    .header.h = 15,
+    .data_size = 20,
     .data = usb_map,
 };
 
