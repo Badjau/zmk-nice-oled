@@ -14,11 +14,11 @@ config NICE_EPAPER_ON
 
 config NICE_OLED_CUSTOM_CANVAS_WIDTH
     int "Custom Canvas Width"
-    default 68
-
+    default 128
+    
 config NICE_OLED_CUSTOM_CANVAS_HEIGHT
     int "Custom Canvas Height"
-    default 160
+    default 32
 
 config LV_Z_VDB_SIZE
     default 64 if NICE_OLED_ON
