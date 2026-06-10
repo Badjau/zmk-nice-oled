@@ -891,7 +891,7 @@ static void draw_canvas(lv_obj_t *widget, lv_color_t cbuf[], const struct status
 #endif // <-- NUEVO
 
     // Rotate for horizontal display
-    rotate_canvas(canvas, cbuf);
+    //rotate_canvas(canvas, cbuf);
 }
 
 /**
