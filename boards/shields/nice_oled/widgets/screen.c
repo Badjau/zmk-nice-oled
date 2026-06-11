@@ -294,7 +294,7 @@ static void draw_mods_status(lv_obj_t *canvas, const struct status_state *state)
 
     // Las imágenes son 14x14 píxeles
     const int img_size = 14;
-    const int spacing = 2;
+    const int spacing = 1;
 
     // Posición Base según tipo de pantalla y layout
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED_VER)
