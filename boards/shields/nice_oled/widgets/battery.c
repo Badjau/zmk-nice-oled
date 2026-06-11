@@ -72,7 +72,7 @@ static void draw_level(lv_obj_t *canvas, const struct status_state *state) {
 
     sprintf(text, "%i%%", state->battery);
     // x, y, width, dsc, text
-#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+#if IS_ENABLED(CONFIG_ZMK_SPLIT) && !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     int batt_x = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_X;
     int batt_y = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_Y;
 #else
@@ -86,7 +86,7 @@ static void draw_charging_level(lv_obj_t *canvas, const struct status_state *sta
     lv_draw_img_dsc_t img_dsc;
     lv_draw_img_dsc_init(&img_dsc);
 
-#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+#if IS_ENABLED(CONFIG_ZMK_SPLIT) && !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     int bolt_x = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_X;
     int bolt_y = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_Y;
 #else
