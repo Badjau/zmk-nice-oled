@@ -28,14 +28,34 @@ static void draw_ble_disconnected(lv_obj_t *canvas) {
     lv_draw_img_dsc_t img_dsc;
     lv_draw_img_dsc_init(&img_dsc);
 
-    lv_canvas_draw_img(canvas, CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_X, CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_Y, &bt_no_signal, &img_dsc);
+#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+    lv_canvas_draw_img(canvas,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_X,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_Y,
+        &bt_no_signal, &img_dsc);
+#else
+    lv_canvas_draw_img(canvas,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_X,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_Y,
+        &bt_no_signal, &img_dsc);
+#endif
 }
 
 static void draw_ble_connected(lv_obj_t *canvas) {
     lv_draw_img_dsc_t img_dsc;
     lv_draw_img_dsc_init(&img_dsc);
 
-    lv_canvas_draw_img(canvas, CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_X, CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_Y, &bt, &img_dsc);
+#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+    lv_canvas_draw_img(canvas,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_X,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_Y,
+        &bt, &img_dsc);
+#else
+    lv_canvas_draw_img(canvas,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_X,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_Y,
+        &bt, &img_dsc);
+#endif
 }
 
 void draw_output_status(lv_obj_t *canvas, const struct status_state *state) {

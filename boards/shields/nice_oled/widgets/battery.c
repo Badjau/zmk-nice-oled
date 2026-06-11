@@ -72,18 +72,28 @@ static void draw_level(lv_obj_t *canvas, const struct status_state *state) {
 
     sprintf(text, "%i%%", state->battery);
     // x, y, width, dsc, text
-    lv_canvas_draw_text(canvas, CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_X, CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_Y, 42, &label_right_dsc, text);
+#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+    int batt_x = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_X;
+    int batt_y = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_Y;
+#else
+    int batt_x = CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_X;
+    int batt_y = CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_Y;
+#endif
+    lv_canvas_draw_text(canvas, batt_x, batt_y, 42, &label_right_dsc, text);
 }
 
 static void draw_charging_level(lv_obj_t *canvas, const struct status_state *state) {
     lv_draw_img_dsc_t img_dsc;
     lv_draw_img_dsc_init(&img_dsc);
 
-    // Only draw the bolt (lightning) icon, no number
-    lv_canvas_draw_img(canvas,
-        CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_X,
-        CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_Y,
-        &bolt, &img_dsc);
+#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+    int bolt_x = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_X;
+    int bolt_y = CONFIG_NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_Y;
+#else
+    int bolt_x = CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_X;
+    int bolt_y = CONFIG_NICE_OLED_WIDGET_BATTERY_CUSTOM_Y;
+#endif
+    lv_canvas_draw_img(canvas, bolt_x, bolt_y, &bolt, &img_dsc);
 }
 
 void draw_battery_status(lv_obj_t *canvas, const struct status_state *state) {

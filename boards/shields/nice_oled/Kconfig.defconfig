@@ -547,6 +547,28 @@ config NICE_OLED_WIDGET_BATTERY_CUSTOM_Y
     default 50
 ##}}}
 
+## BATTERY WIDGET PERIPHERAL POSITION {{{
+config NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_X
+    int "Battery widget X position (peripheral)"
+    default 90 if NICE_OLED_ON
+    default 90
+
+config NICE_OLED_WIDGET_BATTERY_PERIPHERAL_CUSTOM_Y
+    int "Battery widget Y position (peripheral)"
+    default 0 if NICE_OLED_ON
+    default 0
+
+config NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_X
+    int "Output BT icon X position (peripheral)"
+    default 90 if NICE_OLED_ON
+    default 90
+
+config NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_Y
+    int "Output BT icon Y position (peripheral)"
+    default 16 if NICE_OLED_ON
+    default 16
+
+
 ## PROFILE WIDGET POSITION {{{
 config NICE_OLED_WIDGET_PROFILE_CUSTOM_X
     int "Profile widget X position"
