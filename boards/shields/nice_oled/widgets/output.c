@@ -76,7 +76,17 @@ void draw_output_status(lv_obj_t *canvas, const struct status_state *state) {
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_OUTPUT_BACKGROUND)
     lv_draw_rect_dsc_t rect_white_dsc;
     init_rect_dsc(&rect_white_dsc, LVGL_FOREGROUND);
-    lv_canvas_draw_rect(canvas, -3, 32, 24, 15, &rect_white_dsc);
+#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_PERIPHERAL)
+    lv_canvas_draw_rect(canvas,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_X - 3,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_PERIPHERAL_CUSTOM_Y,
+        24, 15, &rect_white_dsc);
+#else
+    lv_canvas_draw_rect(canvas,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_X - 3,
+        CONFIG_NICE_OLED_WIDGET_OUTPUT_BT_CUSTOM_Y,
+        24, 15, &rect_white_dsc);
+#endif
 #endif
 
 #endif // CONFIG_NICE_EPAPER_ON
