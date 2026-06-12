@@ -814,6 +814,34 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y
     default 74 if NICE_EPAPER_ON
     default 74
 
+config NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS
+    bool "Show time in two rows (hh / mm)"
+    default n
+    help
+      When enabled, displays the hour on the first row and the minute
+      on the second row, instead of a single "hh:mm" line. Useful for
+      larger fonts or narrow display areas.
+
+choice NICE_OLED_WIDGET_RAW_HID_TIME_FONT
+    prompt "Time widget font size"
+    default NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12
+    help
+      Select the font size for the time widget independently from
+      other HID status widgets.
+
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8
+    bool "8px (pixel_operator_mono_8)"
+
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12
+    bool "12px (pixel_operator_mono_12)"
+
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16
+    bool "16px (pixel_operator_mono_16)"
+
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22
+    bool "22px (pixel_operator_mono_22)"
+endchoice
+
 # Layout submodule
 config NICE_OLED_WIDGET_RAW_HID_LAYOUT_CUSTOM_X
     int "Raw HID Layout X position"

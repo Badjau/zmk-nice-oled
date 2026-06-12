@@ -589,11 +589,21 @@ static void draw_hid_status(lv_obj_t *canvas, const struct status_state *state) 
 #define DRAW_HID_STATUS_FONTS &pixel_operator_mono_12
 #endif // IS_ENABLED(CONFIG_NICE_EPAPER_ON)
 
+// Time widget gets its own configurable font, independent of other HID widgets
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
+#define DRAW_HID_TIME_FONTS &pixel_operator_mono_8
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
+#define DRAW_HID_TIME_FONTS &pixel_operator_mono_16
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
+#define DRAW_HID_TIME_FONTS &pixel_operator_mono_22
+#else
+#define DRAW_HID_TIME_FONTS &pixel_operator_mono_12
+#endif
+
     lv_draw_rect_dsc_t rect_black_dsc;
     init_rect_dsc(&rect_black_dsc, LVGL_BACKGROUND);
     lv_draw_label_dsc_t label_time;
-    // init_label_dsc(&label_time, LVGL_FOREGROUND, &lv_font_montserrat_22, LV_TEXT_ALIGN_CENTER);
-    init_label_dsc(&label_time, LVGL_FOREGROUND, DRAW_HID_STATUS_FONTS, DRAW_HID_STATUS_TEXT_ALIGN);
+    init_label_dsc(&label_time, LVGL_FOREGROUND, DRAW_HID_TIME_FONTS, DRAW_HID_STATUS_TEXT_ALIGN);
     lv_draw_label_dsc_t label_layout;
     init_label_dsc(&label_layout, LVGL_FOREGROUND, DRAW_HID_STATUS_FONTS,
                    DRAW_HID_STATUS_TEXT_ALIGN);
@@ -629,11 +639,26 @@ static void draw_hid_status(lv_obj_t *canvas, const struct status_state *state) 
 #endif
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME)
-        //  Dibujar Hora
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS)
+        // Two-row mode: hour on top, minute below
+        lv_point_t time_size;
+        sprintf(text_buffer, "%02i", state->hour);
+        lv_canvas_draw_text(canvas, CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
+                            CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y,
+                            hid_area_width, &label_time, text_buffer);
+        lv_txt_get_size(&time_size, text_buffer, label_time.font, label_time.letter_space,
+                        label_time.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+        sprintf(text_buffer, "%02i", state->minute);
+        lv_canvas_draw_text(canvas, CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
+                            CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y,
+                            hid_area_width, &label_time, text_buffer);
+#else
+        // Single-row mode: hh:mm (default)
         sprintf(text_buffer, "%02i:%02i", state->hour, state->minute);
         lv_canvas_draw_text(canvas, CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
                             CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y,
                             hid_area_width, &label_time, text_buffer);
+#endif
 #endif
 
         //  Dibujar Layout (condicional)
