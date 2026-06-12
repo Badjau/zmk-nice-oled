@@ -1,0 +1,29 @@
+/*
+ * Example keymap overlay for enabling HID time display on the PERIPHERAL screen.
+ *
+ * Add this to your split keyboard's keymap .overlay file (or .dts).
+ *
+ * Prerequisites:
+ *   - CONFIG_NICE_OLED_WIDGET_RAW_HID=y (central)
+ *   - CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL=y (peripheral)
+ *   - CONFIG_ZMK_SPLIT=y
+ *   - CONFIG_ZMK_SPLIT_BLE=y
+ *   - ZMK split central+peripheral roles configured
+ */
+
+/ {
+    behaviors {
+        /*
+         * hid_fwd – receives HID data forwarded from the central.
+         * The behavior itself is invisible; it serves only as a data
+         * carrier through the split transport.
+         *
+         * Do NOT bind this behavior to any key in your keymap.
+         */
+        hid_fwd: hid_fwd {
+            compatible = "zmk,behavior-hid-fwd";
+            label = "HID_FWD";
+            #binding-cells = <0>;
+        };
+    };
+};

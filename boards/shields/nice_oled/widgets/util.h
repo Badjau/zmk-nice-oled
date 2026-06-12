@@ -59,6 +59,11 @@ struct status_state {
 
 #else
     bool connected;
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
+    bool is_connected;
+    uint8_t hour;
+    uint8_t minute;
+#endif
 #endif
 };
 

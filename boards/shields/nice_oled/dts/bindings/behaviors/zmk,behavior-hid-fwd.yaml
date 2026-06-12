@@ -1,0 +1,28 @@
+# Copyright (c) 2024 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+#
+# Devicetree binding for the "hid_fwd" behavior.
+# Used by the peripheral half to receive HID data forwarded from the central.
+#
+# Add this node to your keymap:
+#
+#   / {
+#       behaviors {
+#           hid_fwd: hid_fwd {
+#               compatible = "zmk,behavior-hid-fwd";
+#               label = "HID_FWD";
+#               #binding-cells = <0>;
+#           };
+#       };
+#   };
+
+description: HID Forward behavior – receives forwarded HID data from central
+
+compatible: "zmk,behavior-hid-fwd"
+
+include: base.yaml
+
+properties:
+  label:
+    type: string
+    required: true

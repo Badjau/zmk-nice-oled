@@ -172,6 +172,18 @@ endif # NICE_OLED_WIDGET_ANIMATION_PERIPHERAL || NICE_OLED_WIDGET_STATIC_IMAGE_P
 config NICE_OLED_WIDGET_PERIPHERAL
     bool "Enable test widget on peripheral"
     default n
+
+config NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
+    bool "Enable RAW HID forwarding to peripheral display (TIME)"
+    default n
+    depends on ZMK_SPLIT
+    help
+      When enabled, the peripheral screen will display HID data (time)
+      forwarded from the central half.  Enable on BOTH central and peripheral
+      builds.  Requires:
+        - CONFIG_NICE_OLED_WIDGET_RAW_HID=y (on central)
+        - The "hid_fwd" behavior node in the keymap devicetree
+        - ZMK split BLE enabled
 ### ONLY FOR PERIPHERAL END }}}
 ### ANIMATION ON PERIPHERAL END }}}
 ### WIDGET ON CENTRAL START {{{

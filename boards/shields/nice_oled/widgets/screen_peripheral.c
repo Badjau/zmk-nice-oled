@@ -18,6 +18,11 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include "output.h"
 #include "screen_peripheral.h"
 
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
+#include <raw_hid/hid.h>
+#include <fonts.h>
+#endif
+
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
 /**
@@ -43,6 +48,35 @@ static struct zmk_widget_luna luna_widget;
  * Draw canvas
  **/
 
+/**
+ * HID time (peripheral)
+ **/
+
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
+
+static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state *state) {
+    if (!state->is_connected) {
+        return; /* No HID data available yet */
+    }
+
+    lv_draw_label_dsc_t label_dsc;
+#if IS_ENABLED(CONFIG_NICE_EPAPER_ON)
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &pixel_operator_mono_16, LV_TEXT_ALIGN_LEFT);
+#else
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &pixel_operator_mono_12, LV_TEXT_ALIGN_LEFT);
+#endif
+
+    char text[8];
+    snprintf(text, sizeof(text), "%02u:%02u", state->hour, state->minute);
+
+    lv_canvas_draw_text(canvas,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y,
+                        60, &label_dsc, text);
+}
+
+#endif /* CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL */
+
 static void draw_canvas(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
     lv_obj_t *canvas = lv_obj_get_child(widget, 0);
 
@@ -50,6 +84,10 @@ static void draw_canvas(lv_obj_t *widget, lv_color_t cbuf[], const struct status
     draw_background(canvas);
     draw_output_status(canvas, state);
     draw_battery_status(canvas, state);
+
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
+    draw_hid_time_peripheral(canvas, state);
+#endif
 
     // Rotate for horizontal display
     //rotate_canvas(canvas, cbuf);
@@ -135,6 +173,36 @@ ZMK_DISPLAY_WIDGET_LISTENER(widget_peripheral_status, struct peripheral_status_s
 ZMK_SUBSCRIPTION(widget_peripheral_status, zmk_split_peripheral_status_changed);
 
 /**
+ * HID time (peripheral) – event subscriptions
+ **/
+
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
+
+static void hid_time_peripheral_update_cb(struct time_notification time) {
+    struct zmk_widget_screen *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+        widget->state.is_connected = true;
+        widget->state.hour = time.hour;
+        widget->state.minute = time.minute;
+        draw_canvas(widget->obj, widget->cbuf, &widget->state);
+    }
+}
+
+static struct time_notification hid_time_peripheral_get_state(const zmk_event_t *eh) {
+    const struct time_notification *ev = as_time_notification(eh);
+    if (ev == NULL) {
+        return (struct time_notification){.hour = 0, .minute = 0};
+    }
+    return *ev;
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_hid_time_peripheral, struct time_notification,
+                            hid_time_peripheral_update_cb, hid_time_peripheral_get_state);
+ZMK_SUBSCRIPTION(widget_hid_time_peripheral, time_notification);
+
+#endif /* CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL */
+
+/**
  * Initialization
  **/
 
@@ -153,6 +221,10 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
 #endif
     widget_battery_status_init();
     widget_peripheral_status_init();
+
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
+    widget_hid_time_peripheral_init();
+#endif
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_WPM)
     zmk_widget_luna_init(&luna_widget, canvas);

@@ -28,6 +28,11 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_OLED_WIDGET_STATUS)
       zephyr_include_directories(${APPLICATION_SOURCE_DIR}/include)
     endif()
 
+    if(CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL)
+      zephyr_include_directories(include)
+      zephyr_include_directories(${APPLICATION_SOURCE_DIR}/include)
+    endif()
+
     zephyr_library_sources(custom_status_screen.c)
     zephyr_library_sources(assets/images.c)
 
@@ -42,6 +47,10 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_OLED_WIDGET_STATUS)
     endif()
     zephyr_library_sources(widgets/output.c)
     zephyr_library_sources(widgets/util.c)
+
+    if(CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL)
+      zephyr_library_sources(widgets/hid_split_forward.c)
+    endif()
 
     zephyr_library_sources(assets/vim.c)
     if(CONFIG_NICE_OLED_SHOW_SLEEP_ART_ON_IDLE OR CONFIG_NICE_OLED_SHOW_SLEEP_ART_ON_IDLE)
@@ -98,6 +107,11 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_OLED_WIDGET_STATUS)
       target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_STATIC_IMAGE_PERIPHERAL_VIP_MARCOS app PRIVATE assets/vip_marcos.c)
       target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_POKEMON app PRIVATE assets/pokemon.c)
       zephyr_library_sources(widgets/animation.c)
+
+      if(CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL)
+        zephyr_library_sources(src/raw_hid/hid_events_peripheral.c)
+      endif()
+
       zephyr_library_sources(widgets/screen_peripheral.c)
     endif()
 endif()
