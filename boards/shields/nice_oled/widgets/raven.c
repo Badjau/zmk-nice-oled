@@ -35,7 +35,7 @@ const lv_img_dsc_t *idle_imgs[] = {
     &raven_idle,
 };
 
-#define ANIMATION_SPEED_SLOW 1000   /* Slow typing: cycle idle + mouth_open */
+#define ANIMATION_SPEED_SLOW 800   /* Slow typing: cycle idle + mouth_open */
 const lv_img_dsc_t *slow_imgs[] = {
     &raven_idle,
     &raven_mouth_open,
@@ -60,7 +60,7 @@ const lv_img_dsc_t *fast_imgs[] = {
  * Lower  = snappier return to idle.  Higher = more lingering animation.
  * Set RAVEN_FALLOFF_TIMEOUT_MS to 0 to disable completely.
  */
-#define RAVEN_FALLOFF_TIMEOUT_MS 1000
+#define RAVEN_FALLOFF_TIMEOUT_MS 500
 
 /*
  * Falloff WPM floor.
