@@ -112,7 +112,7 @@ ZMK_SUBSCRIPTION(hid_split_central, time_notification);
 /* --------------------------------------------------------------------------
  * PERIPHERAL side – "hid_fwd" behavior driver
  *
- * This driver is instantiated via Zephyr's DEVICE_DT_INST_DEFINE and
+ * This driver is instantiated via BEHAVIOR_DT_INST_DEFINE and
  * must match the devicetree compatible "zmk,behavior-hid-fwd".
  * -------------------------------------------------------------------------- */
 
@@ -146,6 +146,7 @@ static int hid_fwd_binding_released(struct zmk_behavior_binding *binding,
 }
 
 static const struct behavior_driver_api hid_fwd_driver_api = {
+    .locality = BEHAVIOR_LOCALITY_EVENT_SOURCE,
     .binding_pressed  = hid_fwd_binding_pressed,
     .binding_released = hid_fwd_binding_released,
 };
@@ -158,9 +159,9 @@ static int hid_fwd_init(const struct device *dev) {
 /* DT compat: zmk,behavior-hid-fwd */
 #define DT_DRV_COMPAT zmk_behavior_hid_fwd
 
-DEVICE_DT_INST_DEFINE(0, hid_fwd_init, NULL, NULL, NULL,
-                      APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
-                      &hid_fwd_driver_api);
+BEHAVIOR_DT_INST_DEFINE(0, hid_fwd_init, NULL, NULL, NULL,
+                        APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
+                        &hid_fwd_driver_api);
 
 #endif /* PERIPHERAL */
 
