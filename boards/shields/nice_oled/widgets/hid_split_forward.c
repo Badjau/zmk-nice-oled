@@ -87,7 +87,7 @@ static void hid_split_central_forward_time(uint8_t hour, uint8_t minute) {
         .timestamp = k_uptime_get(),
     };
 
-    for (uint8_t src = 1; src <= CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS; src++) {
+    for (uint8_t src = 0; src < CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS; src++) {
         int ret = zmk_split_central_invoke_behavior(src, &binding, evt, true);
         if (ret != 0) {
             LOG_ERR("hid_split: failed to fwd time to periph %u (err %d)", src, ret);
