@@ -380,6 +380,13 @@ config NICE_OLED_WIDGET_RAW_HID_TIME
     bool "Show time"
     default y
 
+config NICE_OLED_WIDGET_RAW_HID_TIME_CENTRAL
+    bool "Show time on central display"
+    default y
+    help
+      When disabled, the central display will not draw the time widget.
+      Time data is still received and forwarded to peripherals.
+
 config NICE_OLED_WIDGET_RAW_HID_VOLUME
     bool "Show volume"
     default y

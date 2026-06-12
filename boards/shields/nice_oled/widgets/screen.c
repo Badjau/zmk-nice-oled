@@ -638,7 +638,7 @@ static void draw_hid_status(lv_obj_t *canvas, const struct status_state *state) 
                             hid_area_width, &label_volume, text_buffer);
 #endif
 
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME)
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CENTRAL)
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS)
         // Two-row mode: hour on top, minute below
         lv_point_t time_size;
@@ -754,7 +754,7 @@ ZMK_DISPLAY_WIDGET_LISTENER(widget_is_connected, struct is_connected_notificatio
                             hid_is_connected_update_cb, get_is_hid_connected);
 ZMK_SUBSCRIPTION(widget_is_connected, is_connected_notification);
 
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME)
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CENTRAL)
 //  Listener para la hora
 static struct time_notification get_time(const zmk_event_t *eh) {
     struct time_notification *notification = as_time_notification(eh);
@@ -1201,7 +1201,7 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
 
 #ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID
     widget_is_connected_init();
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME)
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CENTRAL)
     widget_time_init();
 #endif
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_VOLUME)

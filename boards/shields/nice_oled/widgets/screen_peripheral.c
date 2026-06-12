@@ -59,20 +59,45 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
         return; /* No HID data available yet */
     }
 
-    lv_draw_label_dsc_t label_dsc;
-#if IS_ENABLED(CONFIG_NICE_EPAPER_ON)
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &pixel_operator_mono_16, LV_TEXT_ALIGN_LEFT);
+// Time widget font selection – mirrors central's DRAW_HID_TIME_FONTS
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
+#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_8
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
+#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_16
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
+#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_22
 #else
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &pixel_operator_mono_12, LV_TEXT_ALIGN_LEFT);
+#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_12
 #endif
 
-    char text[8];
-    snprintf(text, sizeof(text), "%02u:%02u", state->hour, state->minute);
+    lv_draw_label_dsc_t label_dsc;
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_HID_PERIPH_TIME_FONTS, LV_TEXT_ALIGN_LEFT);
 
+    char text[8];
+
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS)
+    // Two-row mode: hour on top, minute below
+    lv_point_t time_size;
+    snprintf(text, sizeof(text), "%02u", state->hour);
     lv_canvas_draw_text(canvas,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y,
                         60, &label_dsc, text);
+    lv_txt_get_size(&time_size, text, label_dsc.font, label_dsc.letter_space,
+                    label_dsc.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+    snprintf(text, sizeof(text), "%02u", state->minute);
+    lv_canvas_draw_text(canvas,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y,
+                        60, &label_dsc, text);
+#else
+    // Single-row mode: hh:mm (default)
+    snprintf(text, sizeof(text), "%02u:%02u", state->hour, state->minute);
+    lv_canvas_draw_text(canvas,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y,
+                        60, &label_dsc, text);
+#endif
 }
 
 #endif /* CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL */
