@@ -57,7 +57,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 /** Magic byte in param1[23:16] identifying the HID data type. */
 #define HID_FWD_MAGIC_TIME  0xAA
 
-#define HID_FWD_BEHAVIOR_DEV_NAME "hid_fwd"
+#define HID_FWD_BEHAVIOR_DEV_NAME "HID_FWD"
 
 /* --------------------------------------------------------------------------
  * CENTRAL side – forward time_notification → peripheral(s)
@@ -155,7 +155,7 @@ static const struct behavior_driver_api hid_fwd_driver_api = {
 };
 
 static int hid_fwd_init(const struct device *dev) {
-    LOG_INF("hid_fwd behavior driver initialized on peripheral");
+    LOG_INF("hid_fwd behavior driver initialized, device name: %s", dev->name);
     return 0;
 }
 
@@ -182,7 +182,7 @@ static int hid_split_forward_init(const struct device *dev) {
         const char *name = ref->device ? ref->device->name : "(null device)";
         LOG_INF("  [%d] name='%s' ready=%d", count, name,
                 ref->device ? device_is_ready(ref->device) : 0);
-        if (ref->device && strcmp(ref->device->name, "hid_fwd") == 0) {
+        if (ref->device && strcmp(ref->device->name, HID_FWD_BEHAVIOR_DEV_NAME) == 0) {
             found = 1;
             LOG_INF("  >>> hid_fwd FOUND at index %d", count);
         }
