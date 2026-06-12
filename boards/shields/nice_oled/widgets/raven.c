@@ -53,6 +53,25 @@ const lv_img_dsc_t *fast_imgs[] = {
     &raven_wings_open,
 };
 
+/*
+ * Falloff timeout (milliseconds).
+ * After this much time with WPM below the floor, the raven snaps to idle.
+ * This overrides ZMK's slow WPM decay — the raven settles faster.
+ * Lower  = snappier return to idle.  Higher = more lingering animation.
+ * Set RAVEN_FALLOFF_TIMEOUT_MS to 0 to disable completely.
+ */
+#define RAVEN_FALLOFF_TIMEOUT_MS 2000
+
+/*
+ * Falloff WPM floor.
+ * WPM below this value is considered "not really typing."
+ * The falloff timer starts counting once WPM drops below this floor.
+ * Typical: 10-30. Match to your slow-typing WPM.
+ */
+#define RAVEN_FALLOFF_WPM_FLOOR 20
+
+static int64_t raven_last_event_time = 0;
+
 struct wpm_raven_status_state {
     uint8_t wpm;
 };
@@ -66,6 +85,21 @@ enum anim_state {
 } current_anim_state;
 
 static void set_animation(lv_obj_t *animing, struct wpm_raven_status_state state) {
+    int64_t now = k_uptime_get();
+
+    /* Only reset the falloff timer while actively typing (WPM above floor).
+     * Once WPM drops below the floor, the timer counts toward the timeout. */
+    if (state.wpm >= RAVEN_FALLOFF_WPM_FLOOR) {
+        raven_last_event_time = now;
+    }
+
+    /* Force idle if the falloff timer has expired */
+#if RAVEN_FALLOFF_TIMEOUT_MS > 0
+    if ((now - raven_last_event_time) > RAVEN_FALLOFF_TIMEOUT_MS) {
+        state.wpm = 0;
+    }
+#endif
+
     if (state.wpm < 5) {
         if (current_anim_state != anim_state_idle) {
             lv_animimg_set_src(animing, SRC(idle_imgs));
