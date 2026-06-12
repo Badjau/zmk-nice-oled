@@ -158,13 +158,12 @@ static int hid_fwd_init(const struct device *dev) {
     return 0;
 }
 
-/* DT compat: zmk,behavior-hid-fwd */
+/* Direct instantiation – if the DT node is missing, BEHAVIOR_DT_INST_DEFINE
+ * produces a compile error. No silent failures. */
 
-#define HID_FWD_INST(n)                                                                           \
-    BEHAVIOR_DT_INST_DEFINE(n, hid_fwd_init, NULL, NULL, NULL,                                    \
-                            POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                     \
-                            &hid_fwd_driver_api);
-DT_INST_FOREACH_STATUS_OKAY(HID_FWD_INST)
+BEHAVIOR_DT_INST_DEFINE(0, hid_fwd_init, NULL, NULL, NULL,
+                        POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
+                        &hid_fwd_driver_api);
 
 #endif /* PERIPHERAL */
 
@@ -173,6 +172,15 @@ DT_INST_FOREACH_STATUS_OKAY(HID_FWD_INST)
  * -------------------------------------------------------------------------- */
 
 static int hid_split_forward_init(const struct device *dev) {
+#if IS_ENABLED(CONFIG_ZMK_SPLIT) && !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+    /* Runtime diagnostic: verify behavior got registered */
+    const struct device *behavior_dev = zmk_behavior_get_binding("hid_fwd");
+    if (behavior_dev == NULL) {
+        LOG_ERR("CRITICAL: hid_fwd behavior NOT found in registry – DT node missing?");
+    } else {
+        LOG_INF("hid_fwd behavior registered OK, device name: %s", behavior_dev->name);
+    }
+#endif
     LOG_DBG("hid_split_forward subsystem ready");
     return 0;
 }
