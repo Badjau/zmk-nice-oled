@@ -2,7 +2,7 @@
 
 #include <zmk/event_manager.h>
 
-#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID
+#if defined(CONFIG_NICE_OLED_WIDGET_RAW_HID) || defined(CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL)
 
 struct is_connected_notification {
     bool value;
