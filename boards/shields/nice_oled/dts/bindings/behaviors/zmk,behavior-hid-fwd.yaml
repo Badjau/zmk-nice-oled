@@ -10,7 +10,6 @@
 #       behaviors {
 #           hid_fwd: hid_fwd {
 #               compatible = "zmk,behavior-hid-fwd";
-#               label = "HID_FWD";
 #               #binding-cells = <0>;
 #           };
 #       };
@@ -21,8 +20,3 @@ description: HID Forward behavior – receives forwarded HID data from central
 compatible: "zmk,behavior-hid-fwd"
 
 include: base.yaml
-
-properties:
-  label:
-    type: string
-    required: true

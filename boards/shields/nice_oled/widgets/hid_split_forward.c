@@ -20,7 +20,6 @@
  *            behaviors {
  *                hid_fwd: hid_fwd {
  *                    compatible = "zmk,behavior-hid-fwd";
- *                    label = "HID_FWD";
  *                    #binding-cells = <0>;
  *                };
  *            };
