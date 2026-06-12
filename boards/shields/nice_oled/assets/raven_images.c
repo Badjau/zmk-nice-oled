@@ -88,8 +88,8 @@ const lv_img_dsc_t raven_mouth_open = {
     .header.reserved = 0,
     .header.w = 38,  /* TODO: set to your image width */
     .header.h = 32,  /* TODO: set to your image height */
-    .data_size = sizeof(raven_mouth_open),
-    .data = raven_mouth_open,
+    .data_size = sizeof(raven_mouth_open_map),
+    .data = raven_mouth_open_map,
 };
 
 // ============================================================================
