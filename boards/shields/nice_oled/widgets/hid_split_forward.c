@@ -90,7 +90,7 @@ static void hid_split_central_forward_time(uint8_t hour, uint8_t minute) {
     for (uint8_t src = 1; src <= CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS; src++) {
         int ret = zmk_split_central_invoke_behavior(src, &binding, evt, true);
         if (ret != 0) {
-            LOG_WRN("hid_split: failed to fwd time to periph %u (err %d)", src, ret);
+            LOG_ERR("hid_split: failed to fwd time to periph %u (err %d)", src, ret);
         }
     }
 }
@@ -98,7 +98,7 @@ static void hid_split_central_forward_time(uint8_t hour, uint8_t minute) {
 static int hid_split_central_time_listener(const zmk_event_t *eh) {
     const struct time_notification *ev = as_time_notification(eh);
     if (ev != NULL) {
-        LOG_DBG("hid_split: central fwd time %02u:%02u", ev->hour, ev->minute);
+        LOG_INF("hid_split: central fwd time %02u:%02u", ev->hour, ev->minute);
         hid_split_central_forward_time(ev->hour, ev->minute);
     }
     return ZMK_EV_EVENT_BUBBLE;
@@ -118,6 +118,8 @@ ZMK_SUBSCRIPTION(hid_split_central, time_notification);
 
 #if IS_ENABLED(CONFIG_ZMK_SPLIT) && !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 
+/* DT compat: zmk,behavior-hid-fwd */
+#define DT_DRV_COMPAT zmk_behavior_hid_fwd
 #include <drivers/behavior.h>
 
 static int hid_fwd_binding_pressed(struct zmk_behavior_binding *binding,
@@ -128,7 +130,7 @@ static int hid_fwd_binding_pressed(struct zmk_behavior_binding *binding,
     case HID_FWD_MAGIC_TIME: {
         uint8_t hour   = (binding->param1) & 0xFF;
         uint8_t minute = (binding->param1 >> 8) & 0xFF;
-        LOG_DBG("hid_fwd: periph rx time %02u:%02u", hour, minute);
+        LOG_INF("hid_fwd: periph rx time %02u:%02u", hour, minute);
         raise_time_notification((struct time_notification){.hour = hour, .minute = minute});
         break;
     }
@@ -157,10 +159,9 @@ static int hid_fwd_init(const struct device *dev) {
 }
 
 /* DT compat: zmk,behavior-hid-fwd */
-#define DT_DRV_COMPAT zmk_behavior_hid_fwd
 
 BEHAVIOR_DT_INST_DEFINE(0, hid_fwd_init, NULL, NULL, NULL,
-                        APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
+                        POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
                         &hid_fwd_driver_api);
 
 #endif /* PERIPHERAL */
