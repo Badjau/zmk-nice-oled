@@ -35,7 +35,7 @@ const lv_img_dsc_t *idle_imgs[] = {
     &raven_idle,
 };
 
-#define ANIMATION_SPEED_SLOW 2000   /* Slow typing: cycle idle + mouth_open */
+#define ANIMATION_SPEED_SLOW 1000   /* Slow typing: cycle idle + mouth_open */
 const lv_img_dsc_t *slow_imgs[] = {
     &raven_idle,
     &raven_mouth_open,
@@ -47,7 +47,7 @@ const lv_img_dsc_t *mid_imgs[] = {
     &raven_mouth_open,
 };
 
-#define ANIMATION_SPEED_FAST 200    /* Fast typing: rapid wings + mouth */
+#define ANIMATION_SPEED_FAST 300    /* Fast typing: rapid wings + mouth */
 const lv_img_dsc_t *fast_imgs[] = {
     &raven_eyes_closed,
     &raven_wings_open,
@@ -60,7 +60,7 @@ const lv_img_dsc_t *fast_imgs[] = {
  * Lower  = snappier return to idle.  Higher = more lingering animation.
  * Set RAVEN_FALLOFF_TIMEOUT_MS to 0 to disable completely.
  */
-#define RAVEN_FALLOFF_TIMEOUT_MS 2000
+#define RAVEN_FALLOFF_TIMEOUT_MS 1000
 
 /*
  * Falloff WPM floor.
@@ -68,7 +68,7 @@ const lv_img_dsc_t *fast_imgs[] = {
  * The falloff timer starts counting once WPM drops below this floor.
  * Typical: 10-30. Match to your slow-typing WPM.
  */
-#define RAVEN_FALLOFF_WPM_FLOOR 20
+#define RAVEN_FALLOFF_WPM_FLOOR 0
 
 static int64_t raven_last_event_time = 0;
 
