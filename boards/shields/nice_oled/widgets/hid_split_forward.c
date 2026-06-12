@@ -160,9 +160,11 @@ static int hid_fwd_init(const struct device *dev) {
 
 /* DT compat: zmk,behavior-hid-fwd */
 
-BEHAVIOR_DT_INST_DEFINE(0, hid_fwd_init, NULL, NULL, NULL,
-                        POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
-                        &hid_fwd_driver_api);
+#define HID_FWD_INST(n)                                                                           \
+    BEHAVIOR_DT_INST_DEFINE(n, hid_fwd_init, NULL, NULL, NULL,                                    \
+                            POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                     \
+                            &hid_fwd_driver_api);
+DT_INST_FOREACH_STATUS_OKAY(HID_FWD_INST)
 
 #endif /* PERIPHERAL */
 
