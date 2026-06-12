@@ -234,6 +234,15 @@ static struct zmk_widget_wpm_bongo_cat wpm_bongo_cat_widget;
 #endif
 
 /**
+ * raven
+ **/
+
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM_RAVEN)
+#include "raven.h"
+static struct zmk_widget_wpm_raven wpm_raven_widget;
+#endif
+
+/**
  * responsive bongo cat
  **/
 
@@ -1139,6 +1148,10 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     zmk_widget_wpm_bongo_cat_init(&wpm_bongo_cat_widget, canvas);
     lv_obj_align(zmk_widget_wpm_bongo_cat_obj(&wpm_bongo_cat_widget), LV_ALIGN_TOP_LEFT, CONFIG_NICE_OLED_WIDGET_BONGO_CAT_CUSTOM_X, CONFIG_NICE_OLED_WIDGET_BONGO_CAT_CUSTOM_Y);
        // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM_BONGO_CAT)
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM_RAVEN)
+    zmk_widget_wpm_raven_init(&wpm_raven_widget, canvas);
+    lv_obj_align(zmk_widget_wpm_raven_obj(&wpm_raven_widget), LV_ALIGN_TOP_LEFT, CONFIG_NICE_OLED_WIDGET_RAVEN_CUSTOM_X, CONFIG_NICE_OLED_WIDGET_RAVEN_CUSTOM_Y);
+       // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM_RAVEN)
 #endif
 
 #endif // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM)

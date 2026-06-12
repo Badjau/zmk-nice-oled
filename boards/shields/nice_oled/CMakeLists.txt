@@ -51,6 +51,7 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_OLED_WIDGET_STATUS)
 
     zephyr_library_sources(assets/luna_images.c)
     zephyr_library_sources(assets/bongo_cat_images.c)
+    zephyr_library_sources(assets/raven_images.c)
 
 
     if(NOT CONFIG_ZMK_SPLIT OR CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
@@ -59,6 +60,7 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_OLED_WIDGET_STATUS)
         zephyr_library_sources(widgets/wpm.c)
         target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_WPM_LUNA app PRIVATE widgets/luna.c)
         target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_WPM_BONGO_CAT app PRIVATE widgets/bongo_cat.c)
+        target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_WPM_RAVEN app PRIVATE widgets/raven.c)
       endif()
 
       if(CONFIG_NICE_OLED_WIDGET_CONNECTION_STATUS)

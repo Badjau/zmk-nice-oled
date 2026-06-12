@@ -240,6 +240,17 @@ config NICE_OLED_WIDGET_WPM_BONGO_CAT_ANIMATION_MS
     default 300
 
 endif # NICE_OLED_WIDGET_WPM_BONGO_CAT }}}
+config NICE_OLED_WIDGET_WPM_RAVEN # {{{
+    bool "Enable wpm raven"
+    default n
+
+if NICE_OLED_WIDGET_WPM_RAVEN
+
+config NICE_OLED_WIDGET_WPM_RAVEN_ANIMATION_MS
+    int "Raven Animation in ms for WPM Widget"
+    default 300
+
+endif # NICE_OLED_WIDGET_WPM_RAVEN }}}
 endif # NICE_OLED_WIDGET_WPM }}}
 ### NICE_OLED_WIDGET_RESPONSIVE {{{
 config NICE_OLED_WIDGET_RESPONSIVE
@@ -696,6 +707,22 @@ config NICE_OLED_WIDGET_BONGO_CAT_CUSTOM_X
 
 config NICE_OLED_WIDGET_BONGO_CAT_CUSTOM_Y
     int "Bongo cat widget Y position"
+    default -9 if NICE_OLED_ON
+    default 8 if NICE_EPAPER_ON
+    default -9
+##}}}
+
+## RAVEN WIDGET POSITION {{{
+# default 64 if NICE_OLED_ON
+
+config NICE_OLED_WIDGET_RAVEN_CUSTOM_X
+    int "Raven widget X position"
+    default 64 if NICE_OLED_ON
+    default 100 if NICE_EPAPER_ON
+    default 64
+
+config NICE_OLED_WIDGET_RAVEN_CUSTOM_Y
+    int "Raven widget Y position"
     default -9 if NICE_OLED_ON
     default 8 if NICE_EPAPER_ON
     default -9
