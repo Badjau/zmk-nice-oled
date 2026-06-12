@@ -40,6 +40,7 @@
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/init.h>
+#include <string.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
@@ -173,12 +174,24 @@ BEHAVIOR_DT_INST_DEFINE(0, hid_fwd_init, NULL, NULL, NULL,
 
 static int hid_split_forward_init(const struct device *dev) {
 #if IS_ENABLED(CONFIG_ZMK_SPLIT) && !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
-    /* Runtime diagnostic: verify behavior got registered */
-    const struct device *behavior_dev = zmk_behavior_get_binding("hid_fwd");
-    if (behavior_dev == NULL) {
-        LOG_ERR("CRITICAL: hid_fwd behavior NOT found in registry – DT node missing?");
-    } else {
-        LOG_INF("hid_fwd behavior registered OK, device name: %s", behavior_dev->name);
+    /* Comprehensive diagnostic: dump all registered behaviors */
+    LOG_INF("=== Behavior registry dump START ===");
+    int count = 0;
+    int found = 0;
+    STRUCT_SECTION_FOREACH(zmk_behavior_ref, ref) {
+        const char *name = ref->device ? ref->device->name : "(null device)";
+        LOG_INF("  [%d] name='%s' ready=%d", count, name,
+                ref->device ? device_is_ready(ref->device) : 0);
+        if (ref->device && strcmp(ref->device->name, "hid_fwd") == 0) {
+            found = 1;
+            LOG_INF("  >>> hid_fwd FOUND at index %d", count);
+        }
+        count++;
+    }
+    LOG_INF("=== Behavior registry dump END: %d behaviors, hid_fwd %s ===",
+            count, found ? "FOUND" : "NOT FOUND");
+    if (!found) {
+        LOG_ERR("CRITICAL: hid_fwd behavior NOT in registry – DT node missing from peripheral build?");
     }
 #endif
     LOG_DBG("hid_split_forward subsystem ready");
