@@ -68,7 +68,7 @@ const lv_img_dsc_t *fast_imgs[] = {
  * The falloff timer starts counting once WPM drops below this floor.
  * Typical: 10-30. Match to your slow-typing WPM.
  */
-#define RAVEN_FALLOFF_WPM_FLOOR 0
+#define RAVEN_FALLOFF_WPM_FLOOR 1
 
 static int64_t raven_last_event_time = 0;
 
