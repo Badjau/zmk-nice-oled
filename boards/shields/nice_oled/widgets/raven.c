@@ -48,6 +48,8 @@ struct raven_state {
     uint32_t last_key_event;   /* k_uptime_get_32() timestamp */
     lv_obj_t *obj;
     bool is_idle;
+    uint8_t frame_idx;         /* which frame in the current tier's cycle */
+    uint8_t active_tier;       /* cached tier to detect tier changes */
 };
 
 static struct raven_state state = {
@@ -56,21 +58,33 @@ static struct raven_state state = {
     .last_key_event = 0,
     .obj = NULL,
     .is_idle = true,
+    .frame_idx = 0,
+    .active_tier = 0,
 };
 
 /* -------------------------------------------------------------------------- */
-/*  Frame selection by WPM tier                                               */
+/*  Tiered frame arrays — cycled through on each keypress                     */
 /* -------------------------------------------------------------------------- */
 
-static const lv_img_dsc_t *get_active_frame(uint8_t wpm) {
-    if (wpm >= WPM_TIER_FAST) {
-        return &raven_wings_open;
-    } else if (wpm >= WPM_TIER_MID) {
-        return &raven_eyes_closed;
-    } else {
-        /* WPM_TIER_SLOW or lower — always show mouth_open for responsiveness */
-        return &raven_mouth_open;
-    }
+enum raven_tier {
+    TIER_SLOW,   /* WPM < 30:  mouth_open  <->  idle        */
+    TIER_MID,    /* WPM < 70:  mouth_open  <->  eyes_closed  */
+    TIER_FAST,   /* WPM >= 70: wings_open   <->  eyes_closed */
+    TIER_COUNT
+};
+
+static const lv_img_dsc_t *tier_frames[TIER_COUNT][2] = {
+    [TIER_SLOW] = { &raven_mouth_open, &raven_idle        },
+    [TIER_MID]  = { &raven_mouth_open, &raven_eyes_closed  },
+    [TIER_FAST] = { &raven_wings_open, &raven_eyes_closed  },
+};
+
+#define FRAMES_PER_TIER 2
+
+static enum raven_tier get_tier(uint8_t wpm) {
+    if (wpm >= WPM_TIER_FAST) return TIER_FAST;
+    if (wpm >= WPM_TIER_MID)  return TIER_MID;
+    return TIER_SLOW;  /* WPM_TIER_SLOW (5) or lower — still reacts */
 }
 
 /* -------------------------------------------------------------------------- */
@@ -82,12 +96,26 @@ static void snap_to_idle(lv_obj_t *obj) {
         return;
     }
     state.is_idle = true;
+    state.frame_idx = 0;
     lv_img_set_src(obj, &raven_idle);
 }
 
 static void show_active_frame(lv_obj_t *obj) {
+    enum raven_tier tier = get_tier(state.wpm);
+
+    /* Reset frame index when crossing into a different tier */
+    if (tier != state.active_tier) {
+        state.frame_idx = 0;
+        state.active_tier = tier;
+    }
+
     state.is_idle = false;
-    lv_img_set_src(obj, get_active_frame(state.wpm));
+
+    /* Advance to the next frame in this tier's cycle */
+    const lv_img_dsc_t *frame = tier_frames[tier][state.frame_idx];
+    lv_img_set_src(obj, frame);
+
+    state.frame_idx = (state.frame_idx + 1) % FRAMES_PER_TIER;
 }
 
 /* -------------------------------------------------------------------------- */
