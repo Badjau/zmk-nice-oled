@@ -75,8 +75,10 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
     char text[8];
 
+
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS)
     // Two-row mode: hour on top, minute below
+    #define TIME_ROW_SPACING_ADJUST 1   // Experiment with this value
     lv_point_t time_size;
     snprintf(text, sizeof(text), "%02u", state->hour);
     lv_canvas_draw_text(canvas,
@@ -88,7 +90,7 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
     snprintf(text, sizeof(text), "%02u", state->minute);
     lv_canvas_draw_text(canvas,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
-                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y - TIME_ROW_SPACING_ADJUST,
                         60, &label_dsc, text);
 #else
     // Single-row mode: hh:mm (default)
