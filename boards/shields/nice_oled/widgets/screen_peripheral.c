@@ -61,13 +61,13 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
 // Time widget font selection (family + size) – mirrors central's DRAW_HID_TIME_FONTS
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_JUA)
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
+  /*#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
   #define DRAW_HID_PERIPH_TIME_FONTS &jua_8
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
   #define DRAW_HID_PERIPH_TIME_FONTS &jua_16
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
   #define DRAW_HID_PERIPH_TIME_FONTS &jua_22
-  #else
+  #else*/
   #define DRAW_HID_PERIPH_TIME_FONTS &jua_12
   #endif
 #else

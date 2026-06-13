@@ -37,20 +37,20 @@ const lv_img_dsc_t *idle_imgs[] = {
 
 #define ANIMATION_SPEED_SLOW 800   /* Slow typing: cycle idle + mouth_open */
 const lv_img_dsc_t *slow_imgs[] = {
-    &raven_idle,
     &raven_mouth_open,
+    &raven_idle,
 };
 
 #define ANIMATION_SPEED_MID 500     /* Medium typing: eyes closed  <-> mouth open */
 const lv_img_dsc_t *mid_imgs[] = {
-    &raven_eyes_closed,
     &raven_mouth_open,
+    &raven_eyes_closed,
 };
 
 #define ANIMATION_SPEED_FAST 300    /* Fast typing: rapid wings + mouth */
 const lv_img_dsc_t *fast_imgs[] = {
-    &raven_eyes_closed,
     &raven_wings_open,
+    &raven_eyes_closed,
 };
 
 /*
