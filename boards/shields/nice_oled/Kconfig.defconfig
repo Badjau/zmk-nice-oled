@@ -869,17 +869,19 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12
     bool "12px"
 
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16
+    bool "14px"
+
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_18
+    bool "16px"
+
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_18
     bool "18px"
-
-config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22
-    bool "22px"
-endchoice
 
 choice NICE_OLED_WIDGET_BATTERY_FONT_FAMILY
     prompt "Battery widget font family"
     default NICE_OLED_WIDGET_BATTERY_FONT_FAMILY_PIXEL_OPERATOR_MONO
-    help
+    helpd
       Select the font family for the battery percentage widget.
       Not all family × size combinations may have a corresponding
       .c font file yet — add one if needed.
