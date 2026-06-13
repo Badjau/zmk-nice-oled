@@ -877,6 +877,7 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16
 
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_18
     bool "18px"
+endchoice
 
 choice NICE_OLED_WIDGET_BATTERY_FONT_FAMILY
     prompt "Battery widget font family"
