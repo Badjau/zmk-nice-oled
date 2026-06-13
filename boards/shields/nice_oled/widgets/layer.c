@@ -2,12 +2,33 @@
 #include <fonts.h>
 #include <zephyr/kernel.h>
 
+// Shared widget font (battery%, layer, profile text) — family + size from Kconfig
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_FAMILY_JUA)
+  #define DRAW_WIDGET_FONTS &jua_12
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_18)
+  #define DRAW_WIDGET_FONTS &jua_18
+  #endif
+#else
+  // Default family: Pixel Operator Mono
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_8)
+  #define DRAW_WIDGET_FONTS &pixel_operator_mono_8
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_12)
+  #define DRAW_WIDGET_FONTS &pixel_operator_mono_12
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_22)
+  #define DRAW_WIDGET_FONTS &pixel_operator_mono_22
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_18)
+  #define DRAW_WIDGET_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
+  #else
+  #define DRAW_WIDGET_FONTS &pixel_operator_mono_16
+  #endif
+#endif
+
 void draw_layer_status(lv_obj_t *canvas, const struct status_state *state) {
     lv_draw_label_dsc_t label_dsc;
 #if IS_ENABLED(CONFIG_NICE_EPAPER_ON)
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &pixel_operator_mono_16, LV_TEXT_ALIGN_CENTER);
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_WIDGET_FONTS, LV_TEXT_ALIGN_CENTER);
 #else
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &pixel_operator_mono_16, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_WIDGET_FONTS, LV_TEXT_ALIGN_LEFT);
 #endif // CONFIG_NICE_EPAPER_ON
 
     char text[10] = {};

@@ -853,7 +853,7 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_PIXEL_OPERATOR_MONO
     bool "Pixel Operator Mono"
 
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_JUA
-    bool "Jua (Jurassic Park)"
+    bool "Jua"
 endchoice
 
 choice NICE_OLED_WIDGET_RAW_HID_TIME_FONT
@@ -873,6 +873,44 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_18
     bool "18px"
 
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22
+    bool "22px"
+endchoice
+
+choice NICE_OLED_WIDGET_FONT_FAMILY
+    prompt "Widget font family (battery%, layer, profile text)"
+    default NICE_OLED_WIDGET_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    help
+      Select the font family for battery percentage, layer label,
+      and profile text widgets.  Not all family × size combinations
+      may have a corresponding .c font file yet — add one if needed.
+
+config NICE_OLED_WIDGET_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    bool "Pixel Operator Mono"
+
+config NICE_OLED_WIDGET_FONT_FAMILY_JUA
+    bool "Jua"
+endchoice
+
+choice NICE_OLED_WIDGET_FONT
+    prompt "Widget font size (battery%, layer, profile text)"
+    default NICE_OLED_WIDGET_FONT_16
+    help
+      Select the font size for battery percentage, layer label,
+      and profile text widgets.
+
+config NICE_OLED_WIDGET_FONT_8
+    bool "8px"
+
+config NICE_OLED_WIDGET_FONT_12
+    bool "12px"
+
+config NICE_OLED_WIDGET_FONT_16
+    bool "16px"
+
+config NICE_OLED_WIDGET_FONT_18
+    bool "18px"
+
+config NICE_OLED_WIDGET_FONT_22
     bool "22px"
 endchoice
 
