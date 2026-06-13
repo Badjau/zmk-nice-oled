@@ -77,6 +77,7 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_OLED_WIDGET_STATUS)
       endif()
 
       target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_HID_INDICATORS app PRIVATE widgets/hid_indicators.c)
+      target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR app PRIVATE assets/capslock.c)
       target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_LUNA app PRIVATE widgets/modifiers.c)
       target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED_SYMBOL app PRIVATE assets/modifiers_sym.c)
 

@@ -337,6 +337,30 @@ config NICE_OLED_WIDGET_HID_INDICATORS_BONGO_CAT_ANIMATION_MS
 endif # NICE_OLED_WIDGET_HID_INDICATORS_BONGO_CAT
 
 endif # NICE_OLED_WIDGET_HID_INDICATORS }}}
+### NICE OLED WIDGET CAPSLOCK INDICATOR {{{
+config NICE_OLED_WIDGET_CAPSLOCK_INDICATOR
+    bool "Enable capslock bitmap indicator (central only)"
+    default n
+    help
+      Show a static lock bitmap on the central display when CapsLock
+      is active.  Hides the bitmap when CapsLock is off.  No HID
+      forwarding to peripherals is needed.
+
+if NICE_OLED_WIDGET_CAPSLOCK_INDICATOR
+
+config NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_X
+    int "CapsLock indicator X position"
+    default 0 if NICE_OLED_ON
+    default 0 if NICE_EPAPER_ON
+    default 0
+
+config NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_Y
+    int "CapsLock indicator Y position"
+    default 0 if NICE_OLED_ON
+    default 0 if NICE_EPAPER_ON
+    default 0
+
+endif # NICE_OLED_WIDGET_CAPSLOCK_INDICATOR }}}
 ### NICE OLED WIDGET RAW HID {{{
 # CONFIG_NICE_OLED_WIDGET_RAW_HID
 # CONFIG_RAW_HID

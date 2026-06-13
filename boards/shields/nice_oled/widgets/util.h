@@ -56,6 +56,9 @@ struct status_state {
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED)
     uint8_t mod_state;
 #endif
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+    bool capslock_active;
+#endif
 
 #else
     bool connected;

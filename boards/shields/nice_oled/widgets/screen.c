@@ -38,6 +38,10 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/hid.h>
 #include <dt-bindings/zmk/modifiers.h>
 #endif
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+#include <zmk/events/hid_indicators_changed.h>
+LV_IMG_DECLARE(capslock);
+#endif
 
 #if !IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CENTRAL_SHOW_BATTERY_PERIPHERAL_ALL) &&                    \
     !IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CENTRAL_SHOW_BATTERY_PERIPHERAL_ONLY) &&                   \
@@ -518,6 +522,28 @@ static void draw_mods_status(lv_obj_t *canvas, const struct status_state *state)
 #endif // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED)
 //  FIN SECCIÓN MODIFICADORES (NUEVA INTEGRACIÓN)
 
+//  INICIO SECCIÓN CAPSLOCK INDICATOR {{{
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+
+#define LED_CLCK 0x02
+
+static void draw_capslock_indicator(lv_obj_t *canvas, const struct status_state *state) {
+    lv_draw_img_dsc_t img_dsc;
+    lv_draw_img_dsc_init(&img_dsc);
+    img_dsc.recolor = LVGL_FOREGROUND;
+    img_dsc.recolor_opa = LV_OPA_COVER;
+
+    if (state->capslock_active) {
+        lv_canvas_draw_img(canvas,
+                           CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_X,
+                           CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_Y,
+                           &capslock, &img_dsc);
+    }
+}
+
+#endif // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR) }}}
+//  FIN SECCIÓN CAPSLOCK INDICATOR
+
 //  INICIO SECCIÓN LISTENER MODIFICADORES (NUEVA INTEGRACIÓN)
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED)
 
@@ -557,6 +583,42 @@ ZMK_SUBSCRIPTION(widget_mods_status, zmk_keycode_state_changed);
 
 #endif // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED)
 //  FIN SECCIÓN LISTENER MODIFICADORES (NUEVA INTEGRACIÓN)
+
+//  INICIO SECCIÓN LISTENER CAPSLOCK INDICATOR {{{
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+
+struct capslock_indicator_state {
+    bool active;
+};
+
+static void set_capslock_indicator(struct zmk_widget_screen *widget,
+                                   struct capslock_indicator_state state) {
+#if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+    widget->state.capslock_active = state.active;
+    draw_canvas(widget->obj, widget->cbuf, &widget->state);
+#endif
+}
+
+static void capslock_indicator_update_cb(struct capslock_indicator_state state) {
+    struct zmk_widget_screen *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+        set_capslock_indicator(widget, state);
+    }
+}
+
+static struct capslock_indicator_state capslock_indicator_get_state(const zmk_event_t *eh) {
+    struct zmk_hid_indicators_changed *ev = as_zmk_hid_indicators_changed(eh);
+    return (struct capslock_indicator_state){
+        .active = (ev->indicators & LED_CLCK) != 0,
+    };
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_capslock_indicator, struct capslock_indicator_state,
+                            capslock_indicator_update_cb, capslock_indicator_get_state)
+ZMK_SUBSCRIPTION(widget_capslock_indicator, zmk_hid_indicators_changed);
+
+#endif // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR) }}}
+//  FIN SECCIÓN LISTENER CAPSLOCK INDICATOR
 
 /**
  * raw hid
@@ -937,6 +999,10 @@ static void draw_canvas(lv_obj_t *widget, lv_color_t cbuf[], const struct status
     draw_mods_status(canvas, state);
 #endif // <-- NUEVO
 
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+    draw_capslock_indicator(canvas, state);
+#endif
+
     // Rotate for horizontal display
     //rotate_canvas(canvas, cbuf);
 }
@@ -1211,6 +1277,10 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED) // <-- NUEVO
     widget_mods_status_init(); // <-- Inicializa el nuevo listener
 #endif                         // <-- NUEVO
+
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+    widget_capslock_indicator_init();
+#endif
 
 #ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID
     widget_is_connected_init();
