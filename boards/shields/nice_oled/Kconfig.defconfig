@@ -841,6 +841,21 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS
       on the second row, instead of a single "hh:mm" line. Useful for
       larger fonts or narrow display areas.
 
+choice NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY
+    prompt "Time widget font family"
+    default NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    help
+      Select the font family for the time widget.  The font size is
+      chosen separately below.  Not all family × size combinations
+      may have a corresponding .c font file yet — add one if needed.
+
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    bool "Pixel Operator Mono"
+
+config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_JUA
+    bool "Jua (Jurassic Park)"
+endchoice
+
 choice NICE_OLED_WIDGET_RAW_HID_TIME_FONT
     prompt "Time widget font size"
     default NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12
@@ -849,16 +864,16 @@ choice NICE_OLED_WIDGET_RAW_HID_TIME_FONT
       other HID status widgets.
 
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8
-    bool "8px (pixel_operator_mono_8)"
+    bool "8px"
 
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12
-    bool "12px (pixel_operator_mono_12)"
+    bool "12px"
 
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16
-    bool "16px (pixel_operator_mono_16)"
+    bool "16px"
 
 config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22
-    bool "22px (pixel_operator_mono_22)"
+    bool "22px"
 endchoice
 
 # Layout submodule

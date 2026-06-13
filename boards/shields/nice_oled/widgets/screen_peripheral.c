@@ -59,15 +59,28 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
         return; /* No HID data available yet */
     }
 
-// Time widget font selection – mirrors central's DRAW_HID_TIME_FONTS
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
-#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_8
-#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
-#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_16
-#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
-#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_22
+// Time widget font selection (family + size) – mirrors central's DRAW_HID_TIME_FONTS
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_JUA)
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
+  #define DRAW_HID_PERIPH_TIME_FONTS &jua_8
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
+  #define DRAW_HID_PERIPH_TIME_FONTS &jua_16
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
+  #define DRAW_HID_PERIPH_TIME_FONTS &jua_22
+  #else
+  #define DRAW_HID_PERIPH_TIME_FONTS &jua_12
+  #endif
 #else
-#define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_12
+  // Default family: Pixel Operator Mono
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
+  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_8
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
+  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_16
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
+  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_22
+  #else
+  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_12
+  #endif
 #endif
 
     lv_draw_label_dsc_t label_dsc;
