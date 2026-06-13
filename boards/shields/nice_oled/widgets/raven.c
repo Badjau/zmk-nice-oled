@@ -12,14 +12,14 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #include <zmk/display.h>
 #include <zmk/event_manager.h>
+#include <zmk/events/keycode_state_changed.h>
 #include <zmk/events/wpm_state_changed.h>
 #include <zmk/wpm.h>
 
 #include "raven.h"
 
-#define SRC(array) (const void **)array, sizeof(array) / sizeof(lv_img_dsc_t *)
-
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
+static lv_timer_t *idle_check_timer = NULL;
 
 LV_IMG_DECLARE(raven_idle);
 LV_IMG_DECLARE(raven_mouth_open);
@@ -27,136 +27,166 @@ LV_IMG_DECLARE(raven_eyes_closed);
 LV_IMG_DECLARE(raven_wings_open);
 
 /*
- * Animation speed definitions (milliseconds per frame cycle).
- * Lower = faster animation. Tune these to match your desired feel.
+ * Idle timeout: after this many milliseconds with no key activity,
+ * the raven snaps back to its idle frame.
+ * Much shorter than the old WPM-decay falloff — instant visual feedback.
  */
-#define ANIMATION_SPEED_IDLE 10000  /* Very slow when not typing */
-const lv_img_dsc_t *idle_imgs[] = {
-    &raven_idle,
-};
-
-#define ANIMATION_SPEED_SLOW 800   /* Slow typing: cycle idle + mouth_open */
-const lv_img_dsc_t *slow_imgs[] = {
-    &raven_mouth_open,
-    &raven_idle,
-};
-
-#define ANIMATION_SPEED_MID 500     /* Medium typing: eyes closed  <-> mouth open */
-const lv_img_dsc_t *mid_imgs[] = {
-    &raven_mouth_open,
-    &raven_eyes_closed,
-};
-
-#define ANIMATION_SPEED_FAST 300    /* Fast typing: rapid wings + mouth */
-const lv_img_dsc_t *fast_imgs[] = {
-    &raven_wings_open,
-    &raven_eyes_closed,
-};
+#define IDLE_TIMEOUT_MS 300
+#define IDLE_CHECK_PERIOD_MS 100
 
 /*
- * Falloff timeout (milliseconds).
- * After this much time with WPM below the floor, the raven snaps to idle.
- * This overrides ZMK's slow WPM decay — the raven settles faster.
- * Lower  = snappier return to idle.  Higher = more lingering animation.
- * Set RAVEN_FALLOFF_TIMEOUT_MS to 0 to disable completely.
+ * WPM tier thresholds for selecting the "active" frame on keypress.
+ * Higher WPM = more dramatic raven reaction.
  */
-#define RAVEN_FALLOFF_TIMEOUT_MS 500
+#define WPM_TIER_SLOW  5   /* Below this: still show mouth_open for responsiveness */
+#define WPM_TIER_MID   30
+#define WPM_TIER_FAST  70
 
-/*
- * Falloff WPM floor.
- * WPM below this value is considered "not really typing."
- * The falloff timer starts counting once WPM drops below this floor.
- * Typical: 10-30. Match to your slow-typing WPM.
- */
-#define RAVEN_FALLOFF_WPM_FLOOR 1
-
-static int64_t raven_last_event_time = 0;
-
-struct wpm_raven_status_state {
+struct raven_state {
     uint8_t wpm;
+    bool key_pressed;
+    uint32_t last_key_event;   /* k_uptime_get_32() timestamp */
+    lv_obj_t *obj;
+    bool is_idle;
 };
 
-enum anim_state {
-    anim_state_none,
-    anim_state_idle,
-    anim_state_slow,
-    anim_state_mid,
-    anim_state_fast
-} current_anim_state;
+static struct raven_state state = {
+    .wpm = 0,
+    .key_pressed = false,
+    .last_key_event = 0,
+    .obj = NULL,
+    .is_idle = true,
+};
 
-static void set_animation(lv_obj_t *animing, struct wpm_raven_status_state state) {
-    int64_t now = k_uptime_get();
+/* -------------------------------------------------------------------------- */
+/*  Frame selection by WPM tier                                               */
+/* -------------------------------------------------------------------------- */
 
-    /* Only reset the falloff timer while actively typing (WPM above floor).
-     * Once WPM drops below the floor, the timer counts toward the timeout. */
-    if (state.wpm >= RAVEN_FALLOFF_WPM_FLOOR) {
-        raven_last_event_time = now;
-    }
-
-    /* Force idle if the falloff timer has expired */
-#if RAVEN_FALLOFF_TIMEOUT_MS > 0
-    if ((now - raven_last_event_time) > RAVEN_FALLOFF_TIMEOUT_MS) {
-        state.wpm = 0;
-    }
-#endif
-
-    if (state.wpm < 5) {
-        if (current_anim_state != anim_state_idle) {
-            lv_animimg_set_src(animing, SRC(idle_imgs));
-            lv_animimg_set_duration(animing, ANIMATION_SPEED_IDLE);
-            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
-            lv_animimg_start(animing);
-            current_anim_state = anim_state_idle;
-        }
-    } else if (state.wpm < 30) {
-        if (current_anim_state != anim_state_slow) {
-            lv_animimg_set_src(animing, SRC(slow_imgs));
-            lv_animimg_set_duration(animing, ANIMATION_SPEED_SLOW);
-            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
-            lv_animimg_start(animing);
-            current_anim_state = anim_state_slow;
-        }
-    } else if (state.wpm < 70) {
-        if (current_anim_state != anim_state_mid) {
-            lv_animimg_set_src(animing, SRC(mid_imgs));
-            lv_animimg_set_duration(animing, ANIMATION_SPEED_MID);
-            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
-            lv_animimg_start(animing);
-            current_anim_state = anim_state_mid;
-        }
+static const lv_img_dsc_t *get_active_frame(uint8_t wpm) {
+    if (wpm >= WPM_TIER_FAST) {
+        return &raven_wings_open;
+    } else if (wpm >= WPM_TIER_MID) {
+        return &raven_eyes_closed;
     } else {
-        if (current_anim_state != anim_state_fast) {
-            lv_animimg_set_src(animing, SRC(fast_imgs));
-            lv_animimg_set_duration(animing, ANIMATION_SPEED_FAST);
-            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
-            lv_animimg_start(animing);
-            current_anim_state = anim_state_fast;
-        }
+        /* WPM_TIER_SLOW or lower — always show mouth_open for responsiveness */
+        return &raven_mouth_open;
     }
 }
 
-struct wpm_raven_status_state wpm_raven_status_get_state(const zmk_event_t *eh) {
-    struct zmk_wpm_state_changed *ev = as_zmk_wpm_state_changed(eh);
-    return (struct wpm_raven_status_state){.wpm = ev->state};
-};
+/* -------------------------------------------------------------------------- */
+/*  Animation helpers                                                         */
+/* -------------------------------------------------------------------------- */
 
-void wpm_raven_status_update_cb(struct wpm_raven_status_state state) {
-    struct zmk_widget_wpm_raven *widget;
-    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_animation(widget->obj, state); }
+static void snap_to_idle(lv_obj_t *obj) {
+    if (state.is_idle) {
+        return;
+    }
+    state.is_idle = true;
+    lv_img_set_src(obj, &raven_idle);
 }
 
-ZMK_DISPLAY_WIDGET_LISTENER(widget_wpm_raven, struct wpm_raven_status_state,
-                            wpm_raven_status_update_cb, wpm_raven_status_get_state)
+static void show_active_frame(lv_obj_t *obj) {
+    state.is_idle = false;
+    lv_img_set_src(obj, get_active_frame(state.wpm));
+}
 
-ZMK_SUBSCRIPTION(widget_wpm_raven, zmk_wpm_state_changed);
+/* -------------------------------------------------------------------------- */
+/*  Idle-check timer: periodically returns raven to idle after no key events  */
+/* -------------------------------------------------------------------------- */
+
+static void check_idle_timeout(lv_timer_t *timer) {
+    if (state.key_pressed || state.obj == NULL || state.is_idle) {
+        return;
+    }
+
+    uint32_t now = k_uptime_get_32();
+    if ((now - state.last_key_event) >= IDLE_TIMEOUT_MS) {
+        snap_to_idle(state.obj);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Widget update — called from LVGL display context                          */
+/* -------------------------------------------------------------------------- */
+
+static void update_raven(struct zmk_widget_wpm_raven *widget,
+                         struct raven_state new_state) {
+    if (!widget || !widget->obj) {
+        return;
+    }
+
+    state.obj = widget->obj;
+    /* Note: state.wpm was already set by the WPM event getter.
+     * state.key_pressed / last_key_event were set by the keycode getter. */
+
+    if (new_state.key_pressed) {
+        show_active_frame(widget->obj);
+    }
+    /* On release we don't immediately snap to idle — the timer handles it */
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Event: keycode state changed  (press / release)                           */
+/* -------------------------------------------------------------------------- */
+
+static struct raven_state raven_get_state_from_keycode(const zmk_event_t *eh) {
+    const struct zmk_keycode_state_changed *ev = as_zmk_keycode_state_changed(eh);
+    if (ev != NULL) {
+        state.key_pressed = ev->state;
+        state.last_key_event = k_uptime_get_32();
+    }
+    return state;
+}
+
+static void raven_update_cb(struct raven_state new_state) {
+    struct zmk_widget_wpm_raven *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+        update_raven(widget, new_state);
+    }
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_raven_keycode, struct raven_state,
+                            raven_update_cb, raven_get_state_from_keycode)
+ZMK_SUBSCRIPTION(widget_raven_keycode, zmk_keycode_state_changed);
+
+/* -------------------------------------------------------------------------- */
+/*  Event: WPM state changed  (tier selection)                                */
+/* -------------------------------------------------------------------------- */
+
+static struct raven_state raven_get_state_from_wpm(const zmk_event_t *eh) {
+    const struct zmk_wpm_state_changed *ev = as_zmk_wpm_state_changed(eh);
+    if (ev != NULL) {
+        state.wpm = ev->state;
+    }
+    return state;
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_raven_wpm, struct raven_state,
+                            raven_update_cb, raven_get_state_from_wpm)
+ZMK_SUBSCRIPTION(widget_raven_wpm, zmk_wpm_state_changed);
+
+/* -------------------------------------------------------------------------- */
+/*  Public API                                                                */
+/* -------------------------------------------------------------------------- */
 
 int zmk_widget_wpm_raven_init(struct zmk_widget_wpm_raven *widget, lv_obj_t *parent) {
-    widget->obj = lv_animimg_create(parent);
+    widget->obj = lv_img_create(parent);
     lv_obj_center(widget->obj);
+
+    /* Start with idle frame */
+    lv_img_set_src(widget->obj, &raven_idle);
+    state.obj = widget->obj;
+    state.is_idle = true;
+
+    /* Create the idle-check timer once (shared across all widget instances) */
+    if (idle_check_timer == NULL) {
+        idle_check_timer = lv_timer_create(check_idle_timeout, IDLE_CHECK_PERIOD_MS, NULL);
+    }
 
     sys_slist_append(&widgets, &widget->node);
 
-    widget_wpm_raven_init();
+    widget_raven_keycode_init();
+    widget_raven_wpm_init();
 
     return 0;
 }
