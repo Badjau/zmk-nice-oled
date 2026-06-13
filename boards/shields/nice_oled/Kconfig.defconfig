@@ -876,41 +876,117 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22
     bool "22px"
 endchoice
 
-choice NICE_OLED_WIDGET_FONT_FAMILY
-    prompt "Widget font family (battery%, layer, profile text)"
-    default NICE_OLED_WIDGET_FONT_FAMILY_PIXEL_OPERATOR_MONO
+choice NICE_OLED_WIDGET_BATTERY_FONT_FAMILY
+    prompt "Battery widget font family"
+    default NICE_OLED_WIDGET_BATTERY_FONT_FAMILY_PIXEL_OPERATOR_MONO
     help
-      Select the font family for battery percentage, layer label,
-      and profile text widgets.  Not all family × size combinations
-      may have a corresponding .c font file yet — add one if needed.
+      Select the font family for the battery percentage widget.
+      Not all family × size combinations may have a corresponding
+      .c font file yet — add one if needed.
 
-config NICE_OLED_WIDGET_FONT_FAMILY_PIXEL_OPERATOR_MONO
+config NICE_OLED_WIDGET_BATTERY_FONT_FAMILY_PIXEL_OPERATOR_MONO
     bool "Pixel Operator Mono"
 
-config NICE_OLED_WIDGET_FONT_FAMILY_JUA
+config NICE_OLED_WIDGET_BATTERY_FONT_FAMILY_JUA
     bool "Jua"
 endchoice
 
-choice NICE_OLED_WIDGET_FONT
-    prompt "Widget font size (battery%, layer, profile text)"
-    default NICE_OLED_WIDGET_FONT_16
+choice NICE_OLED_WIDGET_BATTERY_FONT
+    prompt "Battery widget font size"
+    default NICE_OLED_WIDGET_BATTERY_FONT_16
     help
-      Select the font size for battery percentage, layer label,
-      and profile text widgets.
+      Select the font size for the battery percentage widget
+      independently from other widgets.
 
-config NICE_OLED_WIDGET_FONT_8
+config NICE_OLED_WIDGET_BATTERY_FONT_8
     bool "8px"
 
-config NICE_OLED_WIDGET_FONT_12
+config NICE_OLED_WIDGET_BATTERY_FONT_12
     bool "12px"
 
-config NICE_OLED_WIDGET_FONT_16
+config NICE_OLED_WIDGET_BATTERY_FONT_16
     bool "16px"
 
-config NICE_OLED_WIDGET_FONT_18
+config NICE_OLED_WIDGET_BATTERY_FONT_18
     bool "18px"
 
-config NICE_OLED_WIDGET_FONT_22
+config NICE_OLED_WIDGET_BATTERY_FONT_22
+    bool "22px"
+endchoice
+
+choice NICE_OLED_WIDGET_LAYER_FONT_FAMILY
+    prompt "Layer widget font family"
+    default NICE_OLED_WIDGET_LAYER_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    help
+      Select the font family for the layer label widget.
+      Not all family × size combinations may have a corresponding
+      .c font file yet — add one if needed.
+
+config NICE_OLED_WIDGET_LAYER_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    bool "Pixel Operator Mono"
+
+config NICE_OLED_WIDGET_LAYER_FONT_FAMILY_JUA
+    bool "Jua"
+endchoice
+
+choice NICE_OLED_WIDGET_LAYER_FONT
+    prompt "Layer widget font size"
+    default NICE_OLED_WIDGET_LAYER_FONT_16
+    help
+      Select the font size for the layer label widget
+      independently from other widgets.
+
+config NICE_OLED_WIDGET_LAYER_FONT_8
+    bool "8px"
+
+config NICE_OLED_WIDGET_LAYER_FONT_12
+    bool "12px"
+
+config NICE_OLED_WIDGET_LAYER_FONT_16
+    bool "16px"
+
+config NICE_OLED_WIDGET_LAYER_FONT_18
+    bool "18px"
+
+config NICE_OLED_WIDGET_LAYER_FONT_22
+    bool "22px"
+endchoice
+
+choice NICE_OLED_WIDGET_PROFILE_FONT_FAMILY
+    prompt "Profile widget font family"
+    default NICE_OLED_WIDGET_PROFILE_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    help
+      Select the font family for the profile text widget.
+      Not all family × size combinations may have a corresponding
+      .c font file yet — add one if needed.
+
+config NICE_OLED_WIDGET_PROFILE_FONT_FAMILY_PIXEL_OPERATOR_MONO
+    bool "Pixel Operator Mono"
+
+config NICE_OLED_WIDGET_PROFILE_FONT_FAMILY_JUA
+    bool "Jua"
+endchoice
+
+choice NICE_OLED_WIDGET_PROFILE_FONT
+    prompt "Profile widget font size"
+    default NICE_OLED_WIDGET_PROFILE_FONT_16
+    help
+      Select the font size for the profile text widget
+      independently from other widgets.
+
+config NICE_OLED_WIDGET_PROFILE_FONT_8
+    bool "8px"
+
+config NICE_OLED_WIDGET_PROFILE_FONT_12
+    bool "12px"
+
+config NICE_OLED_WIDGET_PROFILE_FONT_16
+    bool "16px"
+
+config NICE_OLED_WIDGET_PROFILE_FONT_18
+    bool "18px"
+
+config NICE_OLED_WIDGET_PROFILE_FONT_22
     bool "22px"
 endchoice
 

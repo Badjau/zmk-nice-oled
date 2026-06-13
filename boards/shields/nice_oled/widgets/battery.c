@@ -60,38 +60,38 @@ void animation_smart_battery_off(lv_obj_t *canvas) {
 }
 #endif
 
-// Shared widget font (battery%, layer, profile text) — family + size from Kconfig
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_FAMILY_JUA)
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_12)
-  #define DRAW_WIDGET_FONTS &jua_12
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_16)
-  #define DRAW_WIDGET_FONTS &jua_16
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_18)
-  #define DRAW_WIDGET_FONTS &jua_18
+// Battery widget gets its own configurable font (family + size), independent of other widgets
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_FAMILY_JUA)
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_12)
+  #define DRAW_BATTERY_FONTS &jua_12
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_16)
+  #define DRAW_BATTERY_FONTS &jua_16
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_18)
+  #define DRAW_BATTERY_FONTS &jua_18
   #else
-  #define DRAW_WIDGET_FONTS &jua_14
+  #define DRAW_BATTERY_FONTS &jua_14
   #endif
 #else
   // Default family: Pixel Operator Mono
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_8)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_8
-  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_12)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_12
-  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_22)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_22
-  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_18)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_8)
+  #define DRAW_BATTERY_FONTS &pixel_operator_mono_8
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_12)
+  #define DRAW_BATTERY_FONTS &pixel_operator_mono_12
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_22)
+  #define DRAW_BATTERY_FONTS &pixel_operator_mono_22
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_BATTERY_FONT_18)
+  #define DRAW_BATTERY_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
   #else
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_16
+  #define DRAW_BATTERY_FONTS &pixel_operator_mono_16
   #endif
 #endif
 
 static void draw_level(lv_obj_t *canvas, const struct status_state *state) {
     lv_draw_label_dsc_t label_right_dsc;
 #if IS_ENABLED(CONFIG_NICE_EPAPER_ON)
-    init_label_dsc(&label_right_dsc, LVGL_FOREGROUND, DRAW_WIDGET_FONTS, LV_TEXT_ALIGN_RIGHT);
+    init_label_dsc(&label_right_dsc, LVGL_FOREGROUND, DRAW_BATTERY_FONTS, LV_TEXT_ALIGN_RIGHT);
 #else
-    init_label_dsc(&label_right_dsc, LVGL_FOREGROUND, DRAW_WIDGET_FONTS, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_right_dsc, LVGL_FOREGROUND, DRAW_BATTERY_FONTS, LV_TEXT_ALIGN_LEFT);
 #endif // CONFIG_NICE_EPAPER_ON
 
     char text[10] = {};
@@ -125,7 +125,7 @@ static void draw_charging_level(lv_obj_t *canvas, const struct status_state *sta
 void draw_battery_status(lv_obj_t *canvas, const struct status_state *state) {
 #if IS_ENABLED(CONFIG_NICE_EPAPER_ON)
     lv_draw_label_dsc_t label_left_dsc;
-    init_label_dsc(&label_left_dsc, LVGL_FOREGROUND, DRAW_WIDGET_FONTS, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_left_dsc, LVGL_FOREGROUND, DRAW_BATTERY_FONTS, LV_TEXT_ALIGN_LEFT);
     lv_canvas_draw_text(canvas, 0, 19, 25, &label_left_dsc, "BAT");
 #endif // CONFIG_NICE_EPAPER_ON
     if (state->charging) {

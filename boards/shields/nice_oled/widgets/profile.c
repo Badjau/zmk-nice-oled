@@ -36,36 +36,36 @@ static void draw_active_profile(lv_obj_t *canvas, const struct status_state *sta
 
 #if !IS_ENABLED(CONFIG_NICE_EPAPER_ON)
 
-// Shared widget font (battery%, layer, profile text) — family + size from Kconfig
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_FAMILY_JUA)
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_12)
-  #define DRAW_WIDGET_FONTS &jua_12
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_16)
-  #define DRAW_WIDGET_FONTS &jua_16
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_18)
-  #define DRAW_WIDGET_FONTS &jua_18
+// Profile widget gets its own configurable font (family + size), independent of other widgets
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_FAMILY_JUA)
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_12)
+  #define DRAW_PROFILE_FONTS &jua_12
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_16)
+  #define DRAW_PROFILE_FONTS &jua_16
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_18)
+  #define DRAW_PROFILE_FONTS &jua_18
   #else
-  #define DRAW_WIDGET_FONTS &jua_14
+  #define DRAW_PROFILE_FONTS &jua_14
   #endif
 #else
   // Default family: Pixel Operator Mono
-  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_8)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_8
-  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_12)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_12
-  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_22)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_22
-  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_18)
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_8)
+  #define DRAW_PROFILE_FONTS &pixel_operator_mono_8
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_12)
+  #define DRAW_PROFILE_FONTS &pixel_operator_mono_12
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_22)
+  #define DRAW_PROFILE_FONTS &pixel_operator_mono_22
+  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_18)
+  #define DRAW_PROFILE_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
   #else
-  #define DRAW_WIDGET_FONTS &pixel_operator_mono_16
+  #define DRAW_PROFILE_FONTS &pixel_operator_mono_16
   #endif
 #endif
 
 static void draw_active_profile_text(lv_obj_t *canvas, const struct status_state *state) {
     // new label_dsc
     lv_draw_label_dsc_t label_dsc;
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_WIDGET_FONTS, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_PROFILE_FONTS, LV_TEXT_ALIGN_LEFT);
 
     char text[14] = {};
     snprintf(text, sizeof(text), "%d", state->active_profile_index + 1);
