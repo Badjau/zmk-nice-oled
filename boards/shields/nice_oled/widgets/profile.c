@@ -38,9 +38,14 @@ static void draw_active_profile(lv_obj_t *canvas, const struct status_state *sta
 
 // Shared widget font (battery%, layer, profile text) — family + size from Kconfig
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_FAMILY_JUA)
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_12)
   #define DRAW_WIDGET_FONTS &jua_12
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_16)
+  #define DRAW_WIDGET_FONTS &jua_16
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_FONT_18)
   #define DRAW_WIDGET_FONTS &jua_18
+  #else
+  #define DRAW_WIDGET_FONTS &jua_14
   #endif
 #else
   // Default family: Pixel Operator Mono
