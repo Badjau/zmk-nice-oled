@@ -881,7 +881,7 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_FONT_18
 choice NICE_OLED_WIDGET_BATTERY_FONT_FAMILY
     prompt "Battery widget font family"
     default NICE_OLED_WIDGET_BATTERY_FONT_FAMILY_PIXEL_OPERATOR_MONO
-    helpd
+    help
       Select the font family for the battery percentage widget.
       Not all family × size combinations may have a corresponding
       .c font file yet — add one if needed.
