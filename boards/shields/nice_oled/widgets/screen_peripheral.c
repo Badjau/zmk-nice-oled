@@ -73,18 +73,18 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 #else
   // Default family: Pixel Operator Mono
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
-  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_8
+  #define DRAW_HID_TIME_FONTS &pixel_operator_mono_8
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
-  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_16
+  #define DRAW_HID_TIME_FONTS &pixel_operator_mono_16
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
-  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_22
+  #define DRAW_HID_TIME_FONTS &pixel_operator_mono_22
   #else
-  #define DRAW_HID_PERIPH_TIME_FONTS &pixel_operator_mono_12
+  #define DRAW_HID_TIME_FONTS &pixel_operator_mono_12
   #endif
 #endif
 
     lv_draw_label_dsc_t label_dsc;
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_HID_PERIPH_TIME_FONTS, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_HID_TIME_FONTS, LV_TEXT_ALIGN_LEFT);
 
     char text[8];
 
