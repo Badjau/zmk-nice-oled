@@ -59,7 +59,6 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
         return; /* No HID data available yet */
     }
 
-// Time widget gets its own configurable font (family + size), independent of other HID widgets
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_JUA)
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12)
   #define DRAW_HID_TIME_FONTS &jua_12
