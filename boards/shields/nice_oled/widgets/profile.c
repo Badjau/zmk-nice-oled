@@ -58,7 +58,7 @@ static void draw_active_profile(lv_obj_t *canvas, const struct status_state *sta
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_PROFILE_FONT_18)
   #define DRAW_PROFILE_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
   #else
-  #define DRAW_PROFILE_FONTS &pixel_operator_mono_16
+  #define DRAW_PROFILE_FONTS &pixel_operator_mono_8 //original size is 8
   #endif
 #endif
 
