@@ -69,7 +69,7 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
   #define DRAW_HID_PERIPH_TIME_FONTS &jua_22
   #else*/
   #define DRAW_HID_PERIPH_TIME_FONTS &jua_12
-  #endif
+  //#endif
 #else
   // Default family: Pixel Operator Mono
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
