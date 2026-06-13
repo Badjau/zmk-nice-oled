@@ -61,15 +61,14 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
 // Time widget gets its own configurable font (family + size), independent of other HID widgets
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_JUA)
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12)
+  #define DRAW_HID_TIME_FONTS &jua_12
+  #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
+  #define DRAW_HID_TIME_FONTS &jua_16
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_18)
   #define DRAW_HID_TIME_FONTS &jua_18
-  /*#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
-  #define DRAW_HID_TIME_FONTS &jua_8
-  #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_22)
-  #define DRAW_HID_TIME_FONTS &jua_22
-  */
   #else
-  #define DRAW_HID_TIME_FONTS &jua_12
+  #define DRAW_HID_TIME_FONTS &jua_14
   #endif
 #else
   // Default family: Pixel Operator Mono
