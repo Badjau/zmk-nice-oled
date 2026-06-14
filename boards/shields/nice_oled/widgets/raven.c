@@ -38,7 +38,7 @@ LV_IMG_DECLARE(raven_wings_open);
  * WPM tier thresholds for selecting the "active" frame on keypress.
  * Higher WPM = more dramatic raven reaction.
  */
-#define WPM_TIER_SLOW  5   /* Below this: still show mouth_open for responsiveness */
+#define WPM_TIER_SLOW  1   /* Below this: still show mouth_open for responsiveness */
 #define WPM_TIER_MID   30
 #define WPM_TIER_FAST  70
 
