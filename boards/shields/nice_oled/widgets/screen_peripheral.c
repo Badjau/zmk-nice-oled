@@ -123,36 +123,36 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
     snprintf(text, sizeof(text), "%02u", state->minute);
     lv_canvas_draw_text(canvas,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
-                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y - TIME_ROW_SPACING_ADJUST,
+                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y + TIME_ROW_SPACING_ADJUST,
                         60, &label_dsc, text);
 
     // Draw blinking colon between the rows
     if (colon_visible) {
-        // Get the size of a single period (use "." instead of ":")
-        lv_point_t dot_size;
-        lv_txt_get_size(&dot_size, ".", label_dsc.font, label_dsc.letter_space,
-                        label_dsc.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
-
-        // Gap between the two dots (1‑2 pixels is usually enough)
-        lv_coord_t dot_gap = 2;
+        // Define dot size (e.g., 2x2 or 3x3 pixels)
+        lv_coord_t dot_r = 1;          // radius → 3×3 dot
+        lv_coord_t dot_diam = dot_r * 2 + 1;
+        lv_coord_t dot_gap = 2;        // horizontal space between dots
 
         // Horizontal centre under the hour text
         lv_coord_t centre_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X
                             + hour_width / 2;
 
-        // Vertical centre between the rows (same as before)
-        lv_coord_t colon_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y
-                            + time_size.y - TIME_ROW_SPACING_ADJUST / 2 - dot_size.y / 2;
+        // Vertical centre of the gap between hour and minute
+        lv_coord_t gap_centre_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y
+                                + time_size.y + TIME_ROW_SPACING_ADJUST / 2;
 
-        // Left dot
-        lv_canvas_draw_text(canvas,
-                            centre_x - dot_size.x - dot_gap / 2,
-                            colon_y, 60, &label_dsc, ".");
+        lv_coord_t left_x = centre_x - dot_diam - dot_gap/2;
+        lv_coord_t right_x = centre_x + dot_gap/2;
 
-        // Right dot
-        lv_canvas_draw_text(canvas,
-                            centre_x + dot_gap / 2,
-                            colon_y, 60, &label_dsc, ".");
+        lv_color_t col = LVGL_FOREGROUND;   // adjust as needed
+        lv_canvas_fill_bg(canvas, col, (lv_area_t){
+            .x1 = left_x, .y1 = gap_centre_y - dot_r,
+            .x2 = left_x + dot_diam - 1, .y2 = gap_centre_y + dot_r
+        });
+        lv_canvas_fill_bg(canvas, col, (lv_area_t){
+            .x1 = right_x, .y1 = gap_centre_y - dot_r,
+            .x2 = right_x + dot_diam - 1, .y2 = gap_centre_y + dot_r
+        });
     }
 #else
     // Single‑row mode: hh:mm (default)
