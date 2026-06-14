@@ -88,8 +88,6 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
     lv_draw_label_dsc_t label_dsc;
     init_label_dsc(&label_dsc, LVGL_FOREGROUND, DRAW_HID_TIME_FONTS, LV_TEXT_ALIGN_LEFT);
 
-    char text[8];
-
     // Determine if colon should be visible (toggles every 1 s)
     bool colon_visible = (k_uptime_get() / 1000) % 2;
 
