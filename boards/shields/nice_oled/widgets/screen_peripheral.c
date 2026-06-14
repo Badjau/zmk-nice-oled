@@ -24,6 +24,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #endif
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
+static void draw_canvas(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state);
 
 static void hid_time_peripheral_update_cb(struct time_notification time) {
     struct zmk_widget_screen *widget;
