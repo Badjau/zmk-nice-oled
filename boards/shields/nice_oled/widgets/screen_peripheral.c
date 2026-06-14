@@ -25,6 +25,16 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
+static void hid_time_peripheral_update_cb(struct time_notification time) {
+    struct zmk_widget_screen *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+        widget->state.is_connected = true;
+        widget->state.hour = time.hour;
+        widget->state.minute = time.minute;
+        draw_canvas(widget->obj, widget->cbuf, &widget->state);
+    }
+}
+
 /**
  * sleep status
  **/
@@ -253,16 +263,6 @@ ZMK_SUBSCRIPTION(widget_peripheral_status, zmk_split_peripheral_status_changed);
  **/
 
 #ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL
-
-static void hid_time_peripheral_update_cb(struct time_notification time) {
-    struct zmk_widget_screen *widget;
-    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
-        widget->state.is_connected = true;
-        widget->state.hour = time.hour;
-        widget->state.minute = time.minute;
-        draw_canvas(widget->obj, widget->cbuf, &widget->state);
-    }
-}
 
 static struct time_notification hid_time_peripheral_get_state(const zmk_event_t *eh) {
     const struct time_notification *ev = as_time_notification(eh);
