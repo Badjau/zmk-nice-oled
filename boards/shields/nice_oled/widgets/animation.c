@@ -54,14 +54,13 @@ LV_IMG_DECLARE(raven_22);
 LV_IMG_DECLARE(raven_23);
 LV_IMG_DECLARE(raven_24);
 LV_IMG_DECLARE(raven_25);
-LV_IMG_DECLARE(raven_26);
 
 const lv_img_dsc_t *raven_imgs[] = {
     &raven_01, &raven_02, &raven_03, &raven_04, &raven_05, &raven_06,
     &raven_07, &raven_08, &raven_09, &raven_10, &raven_11, &raven_12,
     &raven_13, &raven_14, &raven_15, &raven_16, &raven_17, &raven_18,
     &raven_19, &raven_20, &raven_21, &raven_22, &raven_23, &raven_24,
-    &raven_25, &raven_26
+    &raven_25
 };
 
 
