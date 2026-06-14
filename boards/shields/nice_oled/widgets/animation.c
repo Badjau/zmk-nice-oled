@@ -27,7 +27,45 @@ const lv_img_dsc_t *crystal_imgs[] = {
 };
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL)
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_HEAD)
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_RAVEN)
+
+LV_IMG_DECLARE(raven_01);
+LV_IMG_DECLARE(raven_02);
+LV_IMG_DECLARE(raven_03);
+LV_IMG_DECLARE(raven_04);
+LV_IMG_DECLARE(raven_05);
+LV_IMG_DECLARE(raven_06);
+LV_IMG_DECLARE(raven_07);
+LV_IMG_DECLARE(raven_08);
+LV_IMG_DECLARE(raven_09);
+LV_IMG_DECLARE(raven_10);
+LV_IMG_DECLARE(raven_11);
+LV_IMG_DECLARE(raven_12);
+LV_IMG_DECLARE(raven_13);
+LV_IMG_DECLARE(raven_14);
+LV_IMG_DECLARE(raven_15);
+LV_IMG_DECLARE(raven_16);
+LV_IMG_DECLARE(raven_17);
+LV_IMG_DECLARE(raven_18);
+LV_IMG_DECLARE(raven_19);
+LV_IMG_DECLARE(raven_20);
+LV_IMG_DECLARE(raven_21);
+LV_IMG_DECLARE(raven_22);
+LV_IMG_DECLARE(raven_23);
+LV_IMG_DECLARE(raven_24);
+LV_IMG_DECLARE(raven_25);
+LV_IMG_DECLARE(raven_26);
+
+const lv_img_dsc_t *raven_imgs[] = {
+    &raven_01, &raven_02, &raven_03, &raven_04, &raven_05, &raven_06,
+    &raven_07, &raven_08, &raven_09, &raven_10, &raven_11, &raven_12,
+    &raven_13, &raven_14, &raven_15, &raven_16, &raven_17, &raven_18,
+    &raven_19, &raven_20, &raven_21, &raven_22, &raven_23, &raven_24,
+    &raven_25, &raven_26
+};
+
+
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_HEAD)
 
 LV_IMG_DECLARE(head_00);
 LV_IMG_DECLARE(head_01);
@@ -177,8 +215,9 @@ void draw_animation(lv_obj_t *canvas, struct zmk_widget_screen *widget) {
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL)
     lv_obj_center(art);
-
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_HEAD)
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_RAVEN)
+    lv_animimg_set_src(art, (const void **)head_imgs, 16);
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_HEAD)
     lv_animimg_set_src(art, (const void **)head_imgs, 16);
 #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_CAT)
     lv_animimg_set_src(art, (const void **)cat_imgs, 8);

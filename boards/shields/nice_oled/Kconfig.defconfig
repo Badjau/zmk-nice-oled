@@ -131,9 +131,13 @@ config NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_GEM
     bool "Enable gem animation on peripheral"
     default n
 
+config NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_RAVEN
+    bool "Enable raven animation on peripheral"
+    default y
+
 config NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_CAT
     bool "Enable cat animation on peripheral"
-    default y
+    default n
 
 config NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_HEAD
     bool "Enable head animation on peripheral"

@@ -31,7 +31,7 @@ LV_IMG_DECLARE(raven_wings_open);
  * the raven snaps back to its idle frame.
  * Much shorter than the old WPM-decay falloff — instant visual feedback.
  */
-#define IDLE_TIMEOUT_MS 300
+#define IDLE_TIMEOUT_MS 200
 #define IDLE_CHECK_PERIOD_MS 100
 
 /*
