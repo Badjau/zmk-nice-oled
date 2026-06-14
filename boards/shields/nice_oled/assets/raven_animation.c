@@ -2615,7 +2615,7 @@ const lv_img_dsc_t raven_00 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_00_map,
 };
 
@@ -2626,7 +2626,7 @@ const lv_img_dsc_t raven_01 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_01_map,
 };
 
@@ -2637,7 +2637,7 @@ const lv_img_dsc_t raven_02 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_02_map,
 };
 
@@ -2648,7 +2648,7 @@ const lv_img_dsc_t raven_03 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_03_map,
 };
 
@@ -2659,7 +2659,7 @@ const lv_img_dsc_t raven_04 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_04_map,
 };
 
@@ -2670,7 +2670,7 @@ const lv_img_dsc_t raven_05 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_05_map,
 };
 
@@ -2681,7 +2681,7 @@ const lv_img_dsc_t raven_06 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_06_map,
 };
 
@@ -2692,7 +2692,7 @@ const lv_img_dsc_t raven_07 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_07_map,
 };
 
@@ -2703,7 +2703,7 @@ const lv_img_dsc_t raven_08 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_08_map,
 };
 
@@ -2714,7 +2714,7 @@ const lv_img_dsc_t raven_09 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_09_map,
 };
 
@@ -2725,7 +2725,7 @@ const lv_img_dsc_t raven_10 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_10_map,
 };
 
@@ -2736,7 +2736,7 @@ const lv_img_dsc_t raven_11 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_11_map,
 };
 
@@ -2747,7 +2747,7 @@ const lv_img_dsc_t raven_12 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_12_map,
 };
 
@@ -2758,7 +2758,7 @@ const lv_img_dsc_t raven_13 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_13_map,
 };
 
@@ -2769,7 +2769,7 @@ const lv_img_dsc_t raven_14 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_14_map,
 };
 
@@ -2780,7 +2780,7 @@ const lv_img_dsc_t raven_15 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_15_map,
 };
 
@@ -2791,7 +2791,7 @@ const lv_img_dsc_t raven_16 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_16_map,
 };
 
@@ -2802,7 +2802,7 @@ const lv_img_dsc_t raven_17 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_17_map,
 };
 
@@ -2813,7 +2813,7 @@ const lv_img_dsc_t raven_18 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_18_map,
 };
 
@@ -2824,7 +2824,7 @@ const lv_img_dsc_t raven_19 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_19_map,
 };
 
@@ -2835,7 +2835,7 @@ const lv_img_dsc_t raven_20 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_20_map,
 };
 
@@ -2846,7 +2846,7 @@ const lv_img_dsc_t raven_21 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_21_map,
 };
 
@@ -2857,7 +2857,7 @@ const lv_img_dsc_t raven_22 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_22_map,
 };
 
@@ -2868,7 +2868,7 @@ const lv_img_dsc_t raven_23 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_23_map,
 };
 
@@ -2879,7 +2879,7 @@ const lv_img_dsc_t raven_24 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_24_map,
 };
 
@@ -2890,7 +2890,7 @@ const lv_img_dsc_t raven_25 = {
   .header.reserved = 0,
   .header.w = 66,
   .header.h = 32,
-  .data_size = 620,
+  .data_size = 268,
   .data = raven_25_map,
 };
 
@@ -2901,7 +2901,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 66,
 //   .header.h = 32,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_26_map,
 // };
 
@@ -2912,7 +2912,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_27_map,
 // };
 
@@ -2923,7 +2923,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_28_map,
 // };
 
@@ -2934,7 +2934,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_29_map,
 // };
 
@@ -2945,7 +2945,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_30_map,
 // };
 
@@ -2956,7 +2956,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_31_map,
 // };
 
@@ -2967,7 +2967,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_32_map,
 // };
 
@@ -2978,7 +2978,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_33_map,
 // };
 
@@ -2989,7 +2989,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_34_map,
 // };
 
@@ -3000,7 +3000,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_35_map,
 // };
 
@@ -3011,7 +3011,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_36_map,
 // };
 
@@ -3022,7 +3022,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_37_map,
 // };
 
@@ -3033,7 +3033,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_38_map,
 // };
 
@@ -3044,7 +3044,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_39_map,
 // };
 
@@ -3055,7 +3055,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_40_map,
 // };
 
@@ -3066,7 +3066,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_41_map,
 // };
 
@@ -3077,7 +3077,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_42_map,
 // };
 
@@ -3088,7 +3088,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_43_map,
 // };
 
@@ -3099,7 +3099,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_44_map,
 // };
 
@@ -3110,7 +3110,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_45_map,
 // };
 
@@ -3121,7 +3121,7 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_46_map,
 // };
 
@@ -3132,6 +3132,6 @@ const lv_img_dsc_t raven_25 = {
 //   .header.reserved = 0,
 //   .header.w = 69,
 //   .header.h = 68,
-//   .data_size = 620,
+//   .data_size = 268,
 //   .data = raven_47_map,
 // };

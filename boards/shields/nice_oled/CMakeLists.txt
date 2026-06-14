@@ -107,7 +107,6 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_OLED_WIDGET_STATUS)
       target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_RAVEN app PRIVATE assets/raven_animation.c)
       # target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_STATIC_IMAGE_PERIPHERAL_VIM app PRIVATE assets/vim.c)
       target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_STATIC_IMAGE_PERIPHERAL_VIP_MARCOS app PRIVATE assets/vip_marcos.c)
-      target_sources_ifdef(CONFIG_NICE_OLED_WIDGET_ANIMATION_PERIPHERAL_POKEMON app PRIVATE assets/pokemon.c)
       zephyr_library_sources(widgets/animation.c)
 
       if(CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL)
