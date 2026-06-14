@@ -90,11 +90,17 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
     char text[8];
 
+    // Determine if colon should be visible (toggles every 1 s)
+    bool colon_visible = (k_uptime_get() / 1000) % 2;
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS)
-    // Two-row mode: hour on top, minute below
-    #define TIME_ROW_SPACING_ADJUST 1   // Experiment with this value
+    // Two‑row mode: hour on top, minute below, colon placed between the rows
+    #define TIME_ROW_SPACING_ADJUST 2   // Adjusts how far the two rows are apart
+
     lv_point_t time_size;
+    char text[8];
+
+    // Draw hour
     snprintf(text, sizeof(text), "%02u", state->hour);
     lv_canvas_draw_text(canvas,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
@@ -102,14 +108,35 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
                         60, &label_dsc, text);
     lv_txt_get_size(&time_size, text, label_dsc.font, label_dsc.letter_space,
                     label_dsc.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+    lv_coord_t hour_width = time_size.x;
+
+    // Draw minute
     snprintf(text, sizeof(text), "%02u", state->minute);
     lv_canvas_draw_text(canvas,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y - TIME_ROW_SPACING_ADJUST,
                         60, &label_dsc, text);
+
+    // Draw blinking colon between the rows
+    if (colon_visible) {
+        // Get colon glyph size to centre it vertically in the gap
+        lv_point_t colon_size;
+        lv_txt_get_size(&colon_size, ":", label_dsc.font, label_dsc.letter_space,
+                        label_dsc.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+
+        // Y position: mid‑point between the bottom of the hour and the top of the minute
+        lv_coord_t colon_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y
+                             - TIME_ROW_SPACING_ADJUST / 2 - colon_size.y / 2;
+        // X position: right after the hour text, with a small gap
+        lv_coord_t colon_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X + hour_width + 1;
+
+        lv_canvas_draw_text(canvas, colon_x, colon_y, 60, &label_dsc, ":");
+    }
 #else
-    // Single-row mode: hh:mm (default)
-    snprintf(text, sizeof(text), "%02u:%02u", state->hour, state->minute);
+    // Single‑row mode: hh:mm (default)
+    char text[8];
+    snprintf(text, sizeof(text), "%02u%s%02u", state->hour,
+             colon_visible ? ":" : " ", state->minute);
     lv_canvas_draw_text(canvas,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
                         CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y,
@@ -118,6 +145,15 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 }
 
 #endif /* CONFIG_NICE_OLED_WIDGET_RAW_HID_PERIPHERAL */
+
+static void screen_refresh_timer_handler(struct k_timer *timer) {
+    struct zmk_widget_screen *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+        draw_canvas(widget->obj, widget->cbuf, &widget->state);
+    }
+}
+
+K_TIMER_DEFINE(screen_refresh_timer, screen_refresh_timer_handler, NULL);
 
 static void draw_canvas(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
     lv_obj_t *canvas = lv_obj_get_child(widget, 0);
@@ -278,6 +314,11 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     zmk_widget_sleep_status_init(&sleep_status_widget, canvas);
     lv_obj_align(zmk_widget_sleep_status_obj(&sleep_status_widget), LV_ALIGN_TOP_LEFT, CONFIG_NICE_OLED_WIDGET_SLEEP_STATUS_CUSTOM_X, CONFIG_NICE_OLED_WIDGET_SLEEP_STATUS_CUSTOM_Y);
 #endif
+
+    // Start the periodic refresh for blinking colon and other animations
+    if (!k_timer_remaining_get(&screen_refresh_timer)) {
+        k_timer_start(&screen_refresh_timer, K_MSEC(500), K_MSEC(500));
+    }
 
     return 0;
 }
