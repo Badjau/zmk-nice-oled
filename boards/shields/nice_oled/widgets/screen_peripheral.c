@@ -146,14 +146,13 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
         lv_coord_t right_x = centre_x + dot_gap / 2;
 
         lv_color_t col = LVGL_FOREGROUND;   // or your preferred colour
-        lv_canvas_fill_bg(canvas, col, (lv_area_t){
-            .x1 = left_x, .y1 = gap_centre_y - dot_r,
-            .x2 = left_x + dot_diam - 1, .y2 = gap_centre_y + dot_r
-        });
-        lv_canvas_fill_bg(canvas, col, (lv_area_t){
-            .x1 = right_x, .y1 = gap_centre_y - dot_r,
-            .x2 = right_x + dot_diam - 1, .y2 = gap_centre_y + dot_r
-        });
+        // Example: Fill a 3x3 square for one dot
+        for (int y = -dot_r; y <= dot_r; y++) {
+            for (int x = -dot_r; x <= dot_r; x++) {
+                lv_canvas_set_px_color(canvas, left_x + x, gap_centre_y + y, col);
+                lv_canvas_set_px_color(canvas, right_x + x, gap_centre_y + y, col);
+            }
+        }
     }
 #else
     // Single‑row mode: hh:mm (default)
