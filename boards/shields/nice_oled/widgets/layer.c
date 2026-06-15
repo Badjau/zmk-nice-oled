@@ -3,28 +3,35 @@
 #include <zephyr/kernel.h>
 
 // Layer widget gets its own configurable font (family + size), independent of other widgets
+// Layer widget gets its own configurable font (family + size), independent of other widgets
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_FAMILY_JUA)
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_12)
-  #define DRAW_LAYER_FONTS &jua_12
+    #define DRAW_LAYER_FONTS &jua_12
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_16)
-  #define DRAW_LAYER_FONTS &jua_16
+    #define DRAW_LAYER_FONTS &jua_16
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_18)
-  #define DRAW_LAYER_FONTS &jua_18
+    #define DRAW_LAYER_FONTS &jua_18
   #else
-  #define DRAW_LAYER_FONTS &jua_14
+    #define DRAW_LAYER_FONTS &jua_14
   #endif
-#else
-  // Default family: Pixel Operator Mono
+
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_FAMILY_DESIGNER)
+  #define DRAW_LAYER_FONTS &designer_16   
+
+#elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_FAMILY_ARIAL7)
+  #define DRAW_LAYER_FONTS &arial7_16    
+
+#else   // Default family: Pixel Operator Mono
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_8)
-  #define DRAW_LAYER_FONTS &pixel_operator_mono_8
+    #define DRAW_LAYER_FONTS &pixel_operator_mono_8
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_12)
-  #define DRAW_LAYER_FONTS &pixel_operator_mono_12
+    #define DRAW_LAYER_FONTS &pixel_operator_mono_12
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_22)
-  #define DRAW_LAYER_FONTS &pixel_operator_mono_22
+    #define DRAW_LAYER_FONTS &pixel_operator_mono_22
   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_LAYER_FONT_18)
-  #define DRAW_LAYER_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
+    #define DRAW_LAYER_FONTS &pixel_operator_mono_16  // fallback: no 18px in POM, use 16
   #else
-  #define DRAW_LAYER_FONTS &pixel_operator_mono_16
+    #define DRAW_LAYER_FONTS &pixel_operator_mono_16
   #endif
 #endif
 
