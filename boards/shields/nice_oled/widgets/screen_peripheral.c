@@ -110,7 +110,7 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS)
     // Two‑row mode: hour on top, minute below, colon placed between the rows
-    #define TIME_ROW_SPACING_ADJUST 5   // Adjusts how far the two rows are apart
+    #define TIME_ROW_SPACING_ADJUST 3   // Adjusts how far the two rows are apart
 
     lv_point_t time_size;
     char text[8];
@@ -134,31 +134,42 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
     // Draw blinking colon between the rows
     if (colon_visible) {
-        lv_coord_t dot_r = 0;          // 0  → 2x2 dot, 1 → 3×3
-        lv_coord_t dot_diam = dot_r * 2 + 1;
-        lv_coord_t dot_gap = 2;        // space between dots
+        lv_coord_t dot_r: 2             //→ 1x1 dot, 2 → 2×2 dot, etc.
+        lv_coord_t dot_size = dot_r;          // side length of the square dot
+        lv_coord_t dot_gap = 2;               // pixel gap between the two dots
+
+        // Safety: skip drawing if dot_size is zero or negative
+        if (dot_size <= 0) {
+            return;   // or continue, depending on context
+        }
 
         lv_coord_t centre_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X
                             + hour_width / 2;
 
-        // ** Correct Y centre of the gap **
-        lv_coord_t base_line = label_dsc.font->base_line;   // get font ascent
+        // Vertical centre of the colon (between hour and minute)
+        lv_coord_t base_line = label_dsc.font->base_line;
         lv_coord_t gap_centre_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y
                                 + time_size.y
                                 + TIME_ROW_SPACING_ADJUST / 2
                                 - base_line;
 
-        lv_coord_t left_x = centre_x - dot_diam - dot_gap / 2;
+        // Calculate left and right dot positions using dot_size and dot_gap
+        lv_coord_t left_x = centre_x - dot_size - dot_gap / 2;
         lv_coord_t right_x = centre_x + dot_gap / 2;
 
-        lv_color_t col = LVGL_FOREGROUND;   // or your preferred colour
-        // Example: Fill a 3x3 square for one dot
-        for (int y = -dot_r; y <= dot_r; y++) {
-            for (int x = -dot_r; x <= dot_r; x++) {
-                lv_canvas_set_px_color(canvas, left_x + x, gap_centre_y + y, col);
-                lv_canvas_set_px_color(canvas, right_x + x, gap_centre_y + y, col);
-            }
-        }
+        // Vertically centre the dots around gap_centre_y
+        lv_coord_t top_y = gap_centre_y - dot_size / 2;
+
+        lv_color_t col = LVGL_FOREGROUND;
+        lv_draw_rect_dsc_t rect_dsc;
+        lv_draw_rect_dsc_init(&rect_dsc);
+        rect_dsc.bg_color = col;
+        rect_dsc.bg_opa = LV_OPA_COVER;
+
+        // Draw left dot
+        lv_canvas_draw_rect(canvas, left_x, top_y, dot_size, dot_size, &rect_dsc);
+        // Draw right dot
+        lv_canvas_draw_rect(canvas, right_x, top_y, dot_size, dot_size, &rect_dsc);
     }
 #else
     // Single‑row mode: hh:mm (default)
