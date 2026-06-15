@@ -112,6 +112,21 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
     // Two‑row mode: hour on top, minute below, colon placed between the rows
     #define TIME_ROW_SPACING_ADJUST 3   // Adjusts how far the two rows are apart
 
+//colon size
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE
+    lv_coord_t dot_size = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE;
+#else
+    //→ 1x1 dot, 2 → 2×2 dot, etc.
+    lv_coord_t dot_size = 2;   // default
+#endif
+
+//spacing between the two dots
+#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP
+    lv_coord_t dot_gap = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP;
+#else
+    lv_coord_t dot_gap = 4;   // default gap
+#endif
+
     lv_point_t time_size;
     char text[8];
 
@@ -134,41 +149,23 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
     // Draw blinking colon between the rows
     if (colon_visible) {
-        lv_coord_t dot_r: 2             //→ 1x1 dot, 2 → 2×2 dot, etc.
-        lv_coord_t dot_size = dot_r;          // side length of the square dot
-        lv_coord_t dot_gap = 2;               // pixel gap between the two dots
-
-        // Safety: skip drawing if dot_size is zero or negative
-        if (dot_size <= 0) {
-            return;   // or continue, depending on context
-        }
-
-        lv_coord_t centre_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X
-                            + hour_width / 2;
-
-        // Vertical centre of the colon (between hour and minute)
+        lv_coord_t centre_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X + hour_width / 2;
         lv_coord_t base_line = label_dsc.font->base_line;
         lv_coord_t gap_centre_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y
                                 + time_size.y
                                 + TIME_ROW_SPACING_ADJUST / 2
                                 - base_line;
 
-        // Calculate left and right dot positions using dot_size and dot_gap
         lv_coord_t left_x = centre_x - dot_size - dot_gap / 2;
         lv_coord_t right_x = centre_x + dot_gap / 2;
-
-        // Vertically centre the dots around gap_centre_y
         lv_coord_t top_y = gap_centre_y - dot_size / 2;
 
-        lv_color_t col = LVGL_FOREGROUND;
         lv_draw_rect_dsc_t rect_dsc;
         lv_draw_rect_dsc_init(&rect_dsc);
-        rect_dsc.bg_color = col;
+        rect_dsc.bg_color = LVGL_FOREGROUND;
         rect_dsc.bg_opa = LV_OPA_COVER;
 
-        // Draw left dot
         lv_canvas_draw_rect(canvas, left_x, top_y, dot_size, dot_size, &rect_dsc);
-        // Draw right dot
         lv_canvas_draw_rect(canvas, right_x, top_y, dot_size, dot_size, &rect_dsc);
     }
 #else
