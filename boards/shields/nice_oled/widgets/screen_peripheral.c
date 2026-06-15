@@ -104,7 +104,7 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS)
     // Two‑row mode: hour on top, minute below, colon placed between the rows
-    #define TIME_ROW_SPACING_ADJUST 3   // Adjusts how far the two rows are apart
+    #define TIME_ROW_SPACING_ADJUST 5   // Adjusts how far the two rows are apart
 
     lv_point_t time_size;
     char text[8];
@@ -128,23 +128,24 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 
     // Draw blinking colon between the rows
     if (colon_visible) {
-        // Define dot size (e.g., 2x2 or 3x3 pixels)
-        lv_coord_t dot_r = 1;          // radius → 3×3 dot
+        lv_coord_t dot_r = 0;          // 0  → 2x2 dot, 1 → 3×3
         lv_coord_t dot_diam = dot_r * 2 + 1;
-        lv_coord_t dot_gap = 2;        // horizontal space between dots
+        lv_coord_t dot_gap = 2;        // space between dots
 
-        // Horizontal centre under the hour text
         lv_coord_t centre_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X
                             + hour_width / 2;
 
-        // Vertical centre of the gap between hour and minute
+        // ** Correct Y centre of the gap **
+        lv_coord_t base_line = label_dsc.font->base_line;   // get font ascent
         lv_coord_t gap_centre_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y
-                                + time_size.y + TIME_ROW_SPACING_ADJUST / 2;
+                                + time_size.y
+                                + TIME_ROW_SPACING_ADJUST / 2
+                                - base_line;
 
-        lv_coord_t left_x = centre_x - dot_diam - dot_gap/2;
-        lv_coord_t right_x = centre_x + dot_gap/2;
+        lv_coord_t left_x = centre_x - dot_diam - dot_gap / 2;
+        lv_coord_t right_x = centre_x + dot_gap / 2;
 
-        lv_color_t col = LVGL_FOREGROUND;   // adjust as needed
+        lv_color_t col = LVGL_FOREGROUND;   // or your preferred colour
         lv_canvas_fill_bg(canvas, col, (lv_area_t){
             .x1 = left_x, .y1 = gap_centre_y - dot_r,
             .x2 = left_x + dot_diam - 1, .y2 = gap_centre_y + dot_r
