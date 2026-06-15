@@ -145,15 +145,18 @@ lv_coord_t dot_gap = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP;
     // Draw blinking colon between the rows
     if (colon_visible) {
         lv_coord_t centre_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X + hour_width / 2;
-        lv_coord_t base_line = label_dsc.font->base_line;
-        lv_coord_t gap_centre_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y
-                                + time_size.y
-                                + TIME_ROW_SPACING_ADJUST / 2
-                                - base_line;
-
+        
+        // Bottom of the hour text
+        lv_coord_t hour_bottom = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y;
+        
+        // Padding between hour text and colon 
+        lv_coord_t colon_top_padding = 2;
+        
+        // Top of the colon dot – start just below the hour text + padding
+        lv_coord_t top_y = hour_bottom + colon_top_padding;
+        
         lv_coord_t left_x = centre_x - dot_size - dot_gap / 2;
         lv_coord_t right_x = centre_x + dot_gap / 2;
-        lv_coord_t top_y = gap_centre_y - dot_size / 2;
 
         lv_draw_rect_dsc_t rect_dsc;
         lv_draw_rect_dsc_init(&rect_dsc);
