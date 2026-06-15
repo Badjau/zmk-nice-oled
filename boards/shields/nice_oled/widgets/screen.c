@@ -1262,6 +1262,7 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
        // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM_BONGO_CAT)
 #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM_RAVEN)
     zmk_widget_wpm_raven_init(&wpm_raven_widget, canvas);
+    lv_obj_move_background(zmk_widget_wpm_raven_obj(&wpm_raven_widget));
     lv_obj_align(zmk_widget_wpm_raven_obj(&wpm_raven_widget), LV_ALIGN_TOP_LEFT, CONFIG_NICE_OLED_WIDGET_RAVEN_CUSTOM_X, CONFIG_NICE_OLED_WIDGET_RAVEN_CUSTOM_Y);
        // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_WPM_RAVEN)
 #endif
@@ -1285,10 +1286,6 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_MODIFIERS_INDICATORS_FIXED) // <-- NUEVO
     widget_mods_status_init(); // <-- Inicializa el nuevo listener
 #endif                         // <-- NUEVO
-
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
-    widget_capslock_indicator_init();
-#endif
 
 #ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID
     widget_is_connected_init();
@@ -1323,6 +1320,10 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
         // Otros campos HID se inicializarán a 0 o sus valores por defecto
     }
 #endif // CONFIG_NICE_OLED_WIDGET_RAW_HID
+
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+    widget_capslock_indicator_init();
+#endif
 
     // tiene que estar siempre al final por la sobre exposicion!!
 #if IS_ENABLED(CONFIG_NICE_OLED_SHOW_SLEEP_ART_ON_IDLE) ||                                         \
