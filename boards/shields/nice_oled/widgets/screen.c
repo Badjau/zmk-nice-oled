@@ -660,6 +660,16 @@ static void draw_hid_status(lv_obj_t *canvas, const struct status_state *state) 
   #else
   #define DRAW_HID_TIME_FONTS &jua_14
   #endif
+#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY_ARIAL7)
+//   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_12)
+//   #define DRAW_HID_TIME_FONTS &jua_12
+//   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_16)
+//   #define DRAW_HID_TIME_FONTS &jua_16
+//   #elif IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_18)
+//   #define DRAW_HID_TIME_FONTS &jua_18
+//   #else
+  #define DRAW_HID_TIME_FONTS &arial_7_16
+  #endif
 #else
   // Default family: Pixel Operator Mono
   #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_FONT_8)
