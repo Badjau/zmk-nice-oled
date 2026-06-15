@@ -867,12 +867,12 @@ config NICE_OLED_WIDGET_RAW_HID_TIME_TWO_ROWS
       larger fonts or narrow display areas.
       
 config CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE
-    bool "Adjust colon size: 1 = 1x1, 2 = 2x2..."
+    int "Adjust colon size: 1 = 1x1, 2 = 2x2..."
     default 2
 
-CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP
-    bool "Adjust colon spacing (px)"
-    default  8
+config CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP
+    int "Adjust colon spacing (px)"
+    default 8
 
 choice NICE_OLED_WIDGET_RAW_HID_TIME_FONT_FAMILY
     prompt "Time widget font family"
