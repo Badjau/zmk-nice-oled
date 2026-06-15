@@ -527,17 +527,7 @@ static void draw_mods_status(lv_obj_t *canvas, const struct status_state *state)
 
 #define LED_CLCK 0x02
 
-static void draw_capslock_indicator(lv_obj_t *canvas, const struct status_state *state) {
-    lv_draw_img_dsc_t img_dsc;
-    lv_draw_img_dsc_init(&img_dsc);
-
-    if (state->capslock_active) {
-        lv_canvas_draw_img(canvas,
-                           CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_X,
-                           CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_Y,
-                           &capslock, &img_dsc);
-    }
-}
+static lv_obj_t *capslock_img = NULL;
 
 #endif // IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR) }}}
 //  FIN SECCIÓN CAPSLOCK INDICATOR
@@ -592,8 +582,13 @@ struct capslock_indicator_state {
 static void set_capslock_indicator(struct zmk_widget_screen *widget,
                                    struct capslock_indicator_state state) {
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
-    widget->state.capslock_active = state.active;
-    draw_canvas(widget->obj, widget->cbuf, &widget->state);
+    if (capslock_img) {
+        if (state.active) {
+            lv_obj_clear_flag(capslock_img, LV_OBJ_FLAG_HIDDEN);
+        } else {
+            lv_obj_add_flag(capslock_img, LV_OBJ_FLAG_HIDDEN);
+        }
+    }
 #endif
 }
 
@@ -1007,10 +1002,6 @@ static void draw_canvas(lv_obj_t *widget, lv_color_t cbuf[], const struct status
     draw_mods_status(canvas, state);
 #endif // <-- NUEVO
 
-#if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
-    draw_capslock_indicator(canvas, state);
-#endif
-
     // Rotate for horizontal display
     //rotate_canvas(canvas, cbuf);
 }
@@ -1322,6 +1313,15 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
 #endif // CONFIG_NICE_OLED_WIDGET_RAW_HID
 
 #if IS_ENABLED(CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR)
+    // Create capslock as an LVGL object child of the container (not canvas)
+    // so it renders on top of the canvas and all canvas children (raven, etc.)
+    capslock_img = lv_img_create(widget->obj);
+    lv_img_set_src(capslock_img, &capslock);
+    lv_obj_set_pos(capslock_img,
+                   CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_X,
+                   CONFIG_NICE_OLED_WIDGET_CAPSLOCK_INDICATOR_CUSTOM_Y);
+    lv_obj_move_foreground(capslock_img);
+    lv_obj_add_flag(capslock_img, LV_OBJ_FLAG_HIDDEN);
     widget_capslock_indicator_init();
 #endif
 
