@@ -155,7 +155,7 @@ if (colon_visible) {
     lv_coord_t centre_x = hour_top_x + hour_width / 2;
 
     // Padding from hour baseline to top of colon dots
-    lv_coord_t colon_top_padding = 0;   // 0 = flush with digit bottom
+    lv_coord_t colon_top_padding = 1;   // 0 = flush with digit bottom
     lv_coord_t colon_top_y = hour_baseline_y + colon_top_padding;
 
     // Optional: clamp so colon never overlaps minute
