@@ -125,48 +125,43 @@ lv_coord_t dot_gap = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP;
 lv_point_t time_size;
 char text[8];
 
-// Get font metrics for baseline alignment
-const lv_font_t *font = label_dsc.font;
-lv_coord_t line_height = font->line_height;
-lv_coord_t base_line = font->base_line;   // distance from top of font to baseline
-
-// --- Draw hour ---
+// --- Draw hour (unchanged position) ---
 lv_coord_t hour_top_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X;
 lv_coord_t hour_top_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y;
 
 snprintf(text, sizeof(text), "%02u", state->hour);
 lv_canvas_draw_text(canvas, hour_top_x, hour_top_y, 60, &label_dsc, text);
 
-// Compute baseline Y of the hour text (where digits visually end)
-lv_coord_t hour_baseline_y = hour_top_y + (line_height - base_line);
-
-// Get hour width for colon centering (optional, keep original logic)
+// Get hour bounding box and font metrics
 lv_txt_get_size(&time_size, text, label_dsc.font, label_dsc.letter_space,
                 label_dsc.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
 lv_coord_t hour_width = time_size.x;
 
-// --- Draw minute ---
-// Place minute text so its baseline is `TIME_ROW_SPACING_ADJUST` below the colon
-// (or directly below hour baseline if colon is hidden – adjust as needed)
-lv_coord_t minute_baseline_y;
-if (colon_visible) {
-    // We'll compute minute baseline after colon is drawn; for now just a placeholder
-    minute_baseline_y = hour_baseline_y + dot_size + TIME_ROW_SPACING_ADJUST;
-} else {
-    minute_baseline_y = hour_baseline_y + TIME_ROW_SPACING_ADJUST;
-}
-lv_coord_t minute_top_y = minute_baseline_y - (line_height - base_line);
+const lv_font_t *font = label_dsc.font;
+lv_coord_t base_line = font->base_line;
+lv_coord_t line_height = font->line_height;
 
+// Baseline Y of hour text (visual bottom of digits)
+lv_coord_t hour_baseline_y = hour_top_y + (line_height - base_line);
+
+// --- Draw minute at fixed Y (original formula) ---
+// This ensures minute never jumps when colon toggles
+lv_coord_t minute_top_y = hour_top_y + time_size.y + TIME_ROW_SPACING_ADJUST;
 snprintf(text, sizeof(text), "%02u", state->minute);
 lv_canvas_draw_text(canvas, hour_top_x, minute_top_y, 60, &label_dsc, text);
 
-// --- Draw blinking colon between the rows (if visible) ---
+// --- Draw blinking colon (always between baseline and minute top) ---
 if (colon_visible) {
     lv_coord_t centre_x = hour_top_x + hour_width / 2;
 
-    // Padding between bottom of hour digits and top of colon dots
-    lv_coord_t colon_top_padding = 0;   // now truly 0 = touching the digits
+    // Padding from hour baseline to top of colon dots
+    lv_coord_t colon_top_padding = 0;   // 0 = flush with digit bottom
     lv_coord_t colon_top_y = hour_baseline_y + colon_top_padding;
+
+    // Optional: clamp so colon never overlaps minute
+    if (colon_top_y + dot_size > minute_top_y) {
+        colon_top_y = minute_top_y - dot_size - 1; // keep 1px gap
+    }
 
     lv_coord_t left_x = centre_x - dot_size - dot_gap / 2;
     lv_coord_t right_x = centre_x + dot_gap / 2;
@@ -180,7 +175,7 @@ if (colon_visible) {
     lv_canvas_draw_rect(canvas, right_x, colon_top_y, dot_size, dot_size, &rect_dsc);
 }
 #else
-    // Single‑row mode: hh:mm (default)
+    // Single‑row mode: hh:mm (defayult)
     char text[8];
     snprintf(text, sizeof(text), "%02u%s%02u", state->hour,
              colon_visible ? ":" : " ", state->minute);
