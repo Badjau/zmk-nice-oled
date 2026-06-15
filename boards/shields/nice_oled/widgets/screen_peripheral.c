@@ -122,50 +122,63 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
 lv_coord_t dot_size = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE;
 lv_coord_t dot_gap = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP;
 
-    lv_point_t time_size;
-    char text[8];
+lv_point_t time_size;
+char text[8];
 
-    // Draw hour
-    snprintf(text, sizeof(text), "%02u", state->hour);
-    lv_canvas_draw_text(canvas,
-                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
-                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y,
-                        60, &label_dsc, text);
-    lv_txt_get_size(&time_size, text, label_dsc.font, label_dsc.letter_space,
-                    label_dsc.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
-    lv_coord_t hour_width = time_size.x;
+// Get font metrics for baseline alignment
+const lv_font_t *font = label_dsc.font;
+lv_coord_t line_height = font->line_height;
+lv_coord_t base_line = font->base_line;   // distance from top of font to baseline
 
-    // Draw minute
-    snprintf(text, sizeof(text), "%02u", state->minute);
-    lv_canvas_draw_text(canvas,
-                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X,
-                        CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y + TIME_ROW_SPACING_ADJUST,
-                        60, &label_dsc, text);
+// --- Draw hour ---
+lv_coord_t hour_top_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X;
+lv_coord_t hour_top_y = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y;
 
-    // Draw blinking colon between the rows
-    if (colon_visible) {
-        lv_coord_t centre_x = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_X + hour_width / 2;
-        
-        // Bottom of the hour text
-        lv_coord_t hour_bottom = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y;
-        
-        // Padding between hour text and colon 
-        lv_coord_t colon_top_padding = 0;
-        
-        // Top of the colon dot – start just below the hour text + padding
-        lv_coord_t top_y = hour_bottom + colon_top_padding;
-        
-        lv_coord_t left_x = centre_x - dot_size - dot_gap / 2;
-        lv_coord_t right_x = centre_x + dot_gap / 2;
+snprintf(text, sizeof(text), "%02u", state->hour);
+lv_canvas_draw_text(canvas, hour_top_x, hour_top_y, 60, &label_dsc, text);
 
-        lv_draw_rect_dsc_t rect_dsc;
-        lv_draw_rect_dsc_init(&rect_dsc);
-        rect_dsc.bg_color = LVGL_FOREGROUND;
-        rect_dsc.bg_opa = LV_OPA_COVER;
+// Compute baseline Y of the hour text (where digits visually end)
+lv_coord_t hour_baseline_y = hour_top_y + (line_height - base_line);
 
-        lv_canvas_draw_rect(canvas, left_x, top_y, dot_size, dot_size, &rect_dsc);
-        lv_canvas_draw_rect(canvas, right_x, top_y, dot_size, dot_size, &rect_dsc);
-    }
+// Get hour width for colon centering (optional, keep original logic)
+lv_txt_get_size(&time_size, text, label_dsc.font, label_dsc.letter_space,
+                label_dsc.line_space, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+lv_coord_t hour_width = time_size.x;
+
+// --- Draw minute ---
+// Place minute text so its baseline is `TIME_ROW_SPACING_ADJUST` below the colon
+// (or directly below hour baseline if colon is hidden – adjust as needed)
+lv_coord_t minute_baseline_y;
+if (colon_visible) {
+    // We'll compute minute baseline after colon is drawn; for now just a placeholder
+    minute_baseline_y = hour_baseline_y + dot_size + TIME_ROW_SPACING_ADJUST;
+} else {
+    minute_baseline_y = hour_baseline_y + TIME_ROW_SPACING_ADJUST;
+}
+lv_coord_t minute_top_y = minute_baseline_y - (line_height - base_line);
+
+snprintf(text, sizeof(text), "%02u", state->minute);
+lv_canvas_draw_text(canvas, hour_top_x, minute_top_y, 60, &label_dsc, text);
+
+// --- Draw blinking colon between the rows (if visible) ---
+if (colon_visible) {
+    lv_coord_t centre_x = hour_top_x + hour_width / 2;
+
+    // Padding between bottom of hour digits and top of colon dots
+    lv_coord_t colon_top_padding = 0;   // now truly 0 = touching the digits
+    lv_coord_t colon_top_y = hour_baseline_y + colon_top_padding;
+
+    lv_coord_t left_x = centre_x - dot_size - dot_gap / 2;
+    lv_coord_t right_x = centre_x + dot_gap / 2;
+
+    lv_draw_rect_dsc_t rect_dsc;
+    lv_draw_rect_dsc_init(&rect_dsc);
+    rect_dsc.bg_color = LVGL_FOREGROUND;
+    rect_dsc.bg_opa = LV_OPA_COVER;
+
+    lv_canvas_draw_rect(canvas, left_x, colon_top_y, dot_size, dot_size, &rect_dsc);
+    lv_canvas_draw_rect(canvas, right_x, colon_top_y, dot_size, dot_size, &rect_dsc);
+}
 #else
     // Single‑row mode: hh:mm (default)
     char text[8];
