@@ -150,7 +150,7 @@ lv_coord_t dot_gap = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP;
         lv_coord_t hour_bottom = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_CUSTOM_Y + time_size.y;
         
         // Padding between hour text and colon 
-        lv_coord_t colon_top_padding = 2;
+        lv_coord_t colon_top_padding = 1;
         
         // Top of the colon dot – start just below the hour text + padding
         lv_coord_t top_y = hour_bottom + colon_top_padding;
