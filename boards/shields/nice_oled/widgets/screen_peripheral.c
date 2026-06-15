@@ -112,18 +112,15 @@ static void draw_hid_time_peripheral(lv_obj_t *canvas, const struct status_state
     // Two‑row mode: hour on top, minute below, colon placed between the rows
     #define TIME_ROW_SPACING_ADJUST 2   // Adjusts how far the two rows are apart
 
-//colon size
-#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE
-//→ 1x1 dot, 2 → 2×2 dot, etc.
-    lv_coord_t dot_size = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE;
-
+#ifndef CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE
+    #define CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE 1   // default 1x1 dot
+#endif
+#ifndef CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP
+    #define CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP 2    // default gap
 #endif
 
-//spacing between the two dots
-#ifdef CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP
-    lv_coord_t dot_gap = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP;
-
-#endif
+lv_coord_t dot_size = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_SIZE;
+lv_coord_t dot_gap = CONFIG_NICE_OLED_WIDGET_RAW_HID_TIME_COLON_GAP;
 
     lv_point_t time_size;
     char text[8];
