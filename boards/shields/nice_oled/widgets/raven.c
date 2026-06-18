@@ -196,6 +196,8 @@ static void update_raven(struct zmk_widget_wpm_raven *widget,
         }
         break;
     }
+    /* Consume the transition so WPM events don't replay it */
+    state.transition = RAVEN_TRANS_NONE;
 }
 
 /* -------------------------------------------------------------------------- */
