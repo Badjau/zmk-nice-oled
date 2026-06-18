@@ -27,8 +27,18 @@ LV_IMG_DECLARE(raven_eyes_closed);
 LV_IMG_DECLARE(raven_wings_open);
 
 /*
+ * Per-key animation transition type.
+ * Set by the keycode event handler, consumed by update_raven().
+ */
+enum raven_transition {
+    RAVEN_TRANS_NONE  = 0,
+    RAVEN_TRANS_OPEN,   /* 0→1: first key pressed — show active (mouth/wings) */
+    RAVEN_TRANS_CLOSE,  /* 1→0: last key released — show rest (eyes_closed / idle) */
+};
+
+/*
  * Idle timeout: after this many milliseconds with no key activity,
- * the raven snaps back to its idle frame.
+ * the raven snaps back to its neutral idle frame.
  * Much shorter than the old WPM-decay falloff — instant visual feedback.
  */
 #define IDLE_TIMEOUT_MS 200
@@ -44,7 +54,8 @@ LV_IMG_DECLARE(raven_wings_open);
 
 struct raven_state {
     uint8_t wpm;
-    bool key_pressed;
+    uint8_t active_keys;       /* number of keys currently held */
+    enum raven_transition transition;  /* what the last key event asks us to do */
     uint32_t last_key_event;   /* k_uptime_get_32() timestamp */
     lv_obj_t *obj;
     bool is_idle;
@@ -54,7 +65,8 @@ struct raven_state {
 
 static struct raven_state state = {
     .wpm = 0,
-    .key_pressed = false,
+    .active_keys = 0,
+    .transition = RAVEN_TRANS_NONE,
     .last_key_event = 0,
     .obj = NULL,
     .is_idle = true,
@@ -100,6 +112,20 @@ static void snap_to_idle(lv_obj_t *obj) {
     lv_img_set_src(obj, &raven_idle);
 }
 
+/*
+ * Show the tier-appropriate "rest" frame (mouth closed / eyes closed)
+ * when the last key is released.  This is NOT the neutral idle — the
+ * idle timer will transition to raven_idle after IDLE_TIMEOUT_MS.
+ */
+static void show_rest_frame(lv_obj_t *obj) {
+    enum raven_tier tier = get_tier(state.wpm);
+    /* Second frame in each tier is the "rest" pose */
+    const lv_img_dsc_t *frame = tier_frames[tier][1];
+    state.is_idle = false;
+    state.frame_idx = 0;
+    lv_img_set_src(obj, frame);
+}
+
 static void show_active_frame(lv_obj_t *obj) {
     enum raven_tier tier = get_tier(state.wpm);
 
@@ -123,7 +149,8 @@ static void show_active_frame(lv_obj_t *obj) {
 /* -------------------------------------------------------------------------- */
 
 static void check_idle_timeout(lv_timer_t *timer) {
-    if (state.key_pressed || state.obj == NULL || state.is_idle) {
+    /* Don't interrupt an active typing burst or an already-idle raven. */
+    if (state.active_keys > 0 || state.obj == NULL || state.is_idle) {
         return;
     }
 
@@ -145,12 +172,30 @@ static void update_raven(struct zmk_widget_wpm_raven *widget,
 
     state.obj = widget->obj;
     /* Note: state.wpm was already set by the WPM event getter.
-     * state.key_pressed / last_key_event were set by the keycode getter. */
+     * state.active_keys / transition / last_key_event were set by the
+     * keycode getter. */
 
-    if (new_state.key_pressed) {
+    switch (new_state.transition) {
+    case RAVEN_TRANS_OPEN:
         show_active_frame(widget->obj);
+        break;
+    case RAVEN_TRANS_CLOSE:
+        /* Last key released — close the mouth / wings immediately. */
+        show_rest_frame(widget->obj);
+        break;
+    case RAVEN_TRANS_NONE:
+    default:
+        /* WPM-only event while keys are held: refresh for a possible
+         * tier change so the active frame updates without waiting for
+         * the next press. */
+        if (state.active_keys > 0 && !state.is_idle) {
+            enum raven_tier tier = get_tier(state.wpm);
+            if (tier != state.active_tier) {
+                show_active_frame(widget->obj);
+            }
+        }
+        break;
     }
-    /* On release we don't immediately snap to idle — the timer handles it */
 }
 
 /* -------------------------------------------------------------------------- */
@@ -160,7 +205,24 @@ static void update_raven(struct zmk_widget_wpm_raven *widget,
 static struct raven_state raven_get_state_from_keycode(const zmk_event_t *eh) {
     const struct zmk_keycode_state_changed *ev = as_zmk_keycode_state_changed(eh);
     if (ev != NULL) {
-        state.key_pressed = ev->state;
+        state.transition = RAVEN_TRANS_NONE;
+
+        if (ev->state) {
+            /* Key pressed — increment the active-key counter. */
+            if (state.active_keys == 0) {
+                state.transition = RAVEN_TRANS_OPEN;
+            }
+            state.active_keys++;
+        } else {
+            /* Key released — decrement (clamp to 0). */
+            if (state.active_keys > 0) {
+                state.active_keys--;
+                if (state.active_keys == 0) {
+                    state.transition = RAVEN_TRANS_CLOSE;
+                }
+            }
+        }
+
         state.last_key_event = k_uptime_get_32();
     }
     return state;
