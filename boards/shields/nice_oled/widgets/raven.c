@@ -59,7 +59,7 @@ enum raven_idle_anim_state {
  */
 #define IDLE_BLINK_MIN_MS   1500  /* Min delay between blinks */
 #define IDLE_BLINK_MAX_MS   4000  /* Max delay between blinks */
-#define IDLE_BLINK_CLOSED_MS 250  /* How long eyes stay closed per blink */
+#define IDLE_BLINK_CLOSED_MS 100  /* How long eyes stay closed per blink */
 
 /*
  * WPM tier thresholds for selecting the "active" frame on keypress.
