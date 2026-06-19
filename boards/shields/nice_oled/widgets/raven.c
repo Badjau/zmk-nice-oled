@@ -6,6 +6,7 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/bluetooth/services/bas.h>
+#include <zephyr/random/random.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
@@ -37,12 +38,28 @@ enum raven_transition {
 };
 
 /*
+ * Idle blink animation states.
+ */
+enum raven_idle_anim_state {
+    IDLE_ANIM_WAITING,   /* Showing raven_idle, waiting for next blink */
+    IDLE_ANIM_BLINKING,  /* Showing raven_eyes_closed, brief blink */
+};
+
+/*
  * Idle timeout: after this many milliseconds with no key activity,
  * the raven snaps back to its neutral idle frame.
  * Much shorter than the old WPM-decay falloff — instant visual feedback.
  */
 #define IDLE_TIMEOUT_MS 200
 #define IDLE_CHECK_PERIOD_MS 100
+
+/*
+ * Idle blink animation: after entering true idle, cycle between
+ * raven_idle (eyes open) and raven_eyes_closed with random delays.
+ */
+#define IDLE_BLINK_MIN_MS   1500  /* Min delay between blinks */
+#define IDLE_BLINK_MAX_MS   4000  /* Max delay between blinks */
+#define IDLE_BLINK_CLOSED_MS 250  /* How long eyes stay closed per blink */
 
 /*
  * WPM tier thresholds for selecting the "active" frame on keypress.
@@ -61,6 +78,9 @@ struct raven_state {
     bool is_idle;
     uint8_t frame_idx;         /* which frame in the current tier's cycle */
     uint8_t active_tier;       /* cached tier to detect tier changes */
+    /* Idle blink animation */
+    enum raven_idle_anim_state idle_anim;
+    uint32_t idle_anim_deadline;  /* k_uptime_get_32() timestamp for next state */
 };
 
 static struct raven_state state = {
@@ -72,6 +92,8 @@ static struct raven_state state = {
     .is_idle = true,
     .frame_idx = 0,
     .active_tier = 0,
+    .idle_anim = IDLE_ANIM_WAITING,
+    .idle_anim_deadline = 0,
 };
 
 /* -------------------------------------------------------------------------- */
@@ -103,6 +125,11 @@ static enum raven_tier get_tier(uint8_t wpm) {
 /*  Animation helpers                                                         */
 /* -------------------------------------------------------------------------- */
 
+/* Return a random delay between IDLE_BLINK_MIN_MS and IDLE_BLINK_MAX_MS. */
+static uint32_t random_blink_delay(void) {
+    return IDLE_BLINK_MIN_MS + (sys_rand32_get() % (IDLE_BLINK_MAX_MS - IDLE_BLINK_MIN_MS + 1));
+}
+
 static void snap_to_idle(lv_obj_t *obj) {
     if (state.is_idle) {
         return;
@@ -110,6 +137,10 @@ static void snap_to_idle(lv_obj_t *obj) {
     state.is_idle = true;
     state.frame_idx = 0;
     lv_img_set_src(obj, &raven_idle);
+
+    /* Start idle blink cycle: first blink after a random delay. */
+    state.idle_anim = IDLE_ANIM_WAITING;
+    state.idle_anim_deadline = k_uptime_get_32() + random_blink_delay();
 }
 
 /*
@@ -149,14 +180,39 @@ static void show_active_frame(lv_obj_t *obj) {
 /* -------------------------------------------------------------------------- */
 
 static void check_idle_timeout(lv_timer_t *timer) {
-    /* Don't interrupt an active typing burst or an already-idle raven. */
-    if (state.active_keys > 0 || state.obj == NULL || state.is_idle) {
+    if (state.active_keys > 0 || state.obj == NULL) {
         return;
     }
 
     uint32_t now = k_uptime_get_32();
-    if ((now - state.last_key_event) >= IDLE_TIMEOUT_MS) {
-        snap_to_idle(state.obj);
+
+    /* Not yet idle — check if the idle timeout has elapsed. */
+    if (!state.is_idle) {
+        if ((now - state.last_key_event) >= IDLE_TIMEOUT_MS) {
+            snap_to_idle(state.obj);
+        }
+        return;
+    }
+
+    /* Already idle — run the blink animation state machine. */
+    if ((int32_t)(now - state.idle_anim_deadline) < 0) {
+        return; /* Not time yet */
+    }
+
+    switch (state.idle_anim) {
+    case IDLE_ANIM_WAITING:
+        /* Time to blink: show eyes closed briefly. */
+        lv_img_set_src(state.obj, &raven_eyes_closed);
+        state.idle_anim = IDLE_ANIM_BLINKING;
+        state.idle_anim_deadline = now + IDLE_BLINK_CLOSED_MS;
+        break;
+
+    case IDLE_ANIM_BLINKING:
+        /* Blink done: back to eyes open, wait for next blink. */
+        lv_img_set_src(state.obj, &raven_idle);
+        state.idle_anim = IDLE_ANIM_WAITING;
+        state.idle_anim_deadline = now + random_blink_delay();
+        break;
     }
 }
 
